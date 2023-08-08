@@ -49,6 +49,7 @@ const (
 	updateFlag          = "update"
 	replaceFlag         = "replace"
 	dryRunFlag          = "dry-run"
+	interactiveFlag     = "interactive"
 	fileTypeParam       = "file-type"
 	pksParam            = "pks"
 	mappingParam        = "map"
@@ -71,6 +72,8 @@ var schImportDocs = cli.CommandDocumentationContent{
 	ShortDesc: "Creates or updates a table by inferring a schema from a file containing sample data.",
 	LongDesc: `If {{.EmphasisLeft}}--create | -c{{.EmphasisRight}} is given the operation will create {{.LessThan}}table{{.GreaterThan}} with a schema that it infers from the supplied file. One or more primary key columns must be specified using the {{.EmphasisLeft}}--pks{{.EmphasisRight}} parameter.
 
+If {{.EmphasisLeft}}--interactive | -i{{.EmphasisRight}} is given the operation will prompt the user to confirm the inferred schema before creating the table.
+
 If {{.EmphasisLeft}}--update | -u{{.EmphasisRight}} is given the operation will update {{.LessThan}}table{{.GreaterThan}} any additional columns, or change the types of columns based on the file supplied.  If the {{.EmphasisLeft}}--keep-types{{.EmphasisRight}} parameter is supplied then the types for existing columns will not be modified, even if they differ from what is in the supplied file.
 
 If {{.EmphasisLeft}}--replace | -r{{.EmphasisRight}} is given the operation will replace {{.LessThan}}table{{.GreaterThan}} with a new, empty table which has a schema inferred from the supplied file but columns tags will be maintained across schemas.  {{.EmphasisLeft}}--keep-types{{.EmphasisRight}} can also be supplied here to guarantee that types are the same in the file and in the pre-existing table.
@@ -87,7 +90,7 @@ If the parameter {{.EmphasisLeft}}--dry-run{{.EmphasisRight}} is supplied a sql 
 `,
 
 	Synopsis: []string{
-		`[--create|--replace] [--force] [--dry-run] [--lower|--upper] [--keep-types] [--file-type <type>] [--float-threshold] [--map {{.LessThan}}mapping-file{{.GreaterThan}}] [--delim {{.LessThan}}delimiter{{.GreaterThan}}]--pks {{.LessThan}}field{{.GreaterThan}},... {{.LessThan}}table{{.GreaterThan}} {{.LessThan}}file{{.GreaterThan}}`,
+		`[--create|--replace|--interactive] [--force] [--dry-run] [--lower|--upper] [--keep-types] [--file-type <type>] [--float-threshold] [--map {{.LessThan}}mapping-file{{.GreaterThan}}] [--delim {{.LessThan}}delimiter{{.GreaterThan}}]--pks {{.LessThan}}field{{.GreaterThan}},... {{.LessThan}}table{{.GreaterThan}} {{.LessThan}}file{{.GreaterThan}}`,
 	},
 }
 
@@ -97,6 +100,7 @@ const (
 	CreateOp SchImportOp = iota
 	UpdateOp
 	ReplaceOp
+	InteractiveOp
 )
 
 type importOptions struct {
@@ -146,6 +150,7 @@ func (cmd ImportCmd) ArgParser() *argparser.ArgParser {
 	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{"table", "Name of the table to be created."})
 	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{"file", "The file being used to infer the schema."})
 	ap.SupportsFlag(createFlag, "c", "Create a table with the schema inferred from the {{.LessThan}}file{{.GreaterThan}} provided.")
+	ap.SupportsFlag(interactiveFlag, "i", "Interactively confirm the schema inferred from the {{.LessThan}}file{{.GreaterThan}} provided before creating the table.")
 	ap.SupportsFlag(updateFlag, "u", "Update a table to match the inferred schema of the {{.LessThan}}file{{.GreaterThan}} provided. All previous data will be lost.")
 	ap.SupportsFlag(replaceFlag, "r", "Replace a table with a new schema that has the inferred schema from the {{.LessThan}}file{{.GreaterThan}} provided. All previous data will be lost.")
 	ap.SupportsFlag(dryRunFlag, "", "Print the sql statement that would be run if executed without the flag.")
@@ -191,17 +196,19 @@ func getSchemaImportArgs(ctx context.Context, apr *argparser.ArgParseResults, dE
 		return nil, err
 	}
 
-	flags := apr.ContainsMany(createFlag, updateFlag, replaceFlag)
+	flags := apr.ContainsMany(createFlag, updateFlag, replaceFlag, interactiveFlag)
 	if len(flags) == 0 {
 		return nil, errhand.BuildDError("error: missing required parameter.").AddDetails("Must provide exactly one of the operation flags '--create', or '--replace'").SetPrintUsage().Build()
 	} else if len(flags) > 1 {
-		return nil, errhand.BuildDError("error: multiple operations supplied").AddDetails("Only one of the flags '--create', '--update', or '--replace' may be provided").SetPrintUsage().Build()
+		return nil, errhand.BuildDError("error: multiple operations supplied").AddDetails("Only one of the flags '--create', '--interactive', '--update', or '--replace' may be provided").SetPrintUsage().Build()
 	}
 
 	var op SchImportOp
 	switch flags[0] {
 	case createFlag:
 		op = CreateOp
+	case interactiveFlag:
+		op = InteractiveOp
 	case updateFlag:
 		op = UpdateOp
 	case replaceFlag:
