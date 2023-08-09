@@ -42,6 +42,7 @@ import (
 	"github.com/dolthub/dolt/go/libraries/utils/funcitr"
 	"github.com/dolthub/dolt/go/libraries/utils/set"
 	"github.com/dolthub/dolt/go/store/types"
+	edtr "github.com/dolthub/dolt/go/libraries/utils/editor"
 )
 
 const (
@@ -227,7 +228,7 @@ func getSchemaImportArgs(ctx context.Context, apr *argparser.ArgParseResults, dE
 		return nil, errhand.BuildDError("error: failed to create table.").AddDetails("A table named '%s' already exists.", tblName).AddDetails("Use --replace or --update instead of --create.").Build()
 	}
 
-	if op != CreateOp {
+	if op != CreateOp && op != InteractiveOp {
 		rows, err := tbl.GetRowData(ctx)
 		if err != nil {
 			return nil, errhand.VerboseErrorFromError(err)
@@ -322,6 +323,15 @@ func importSchema(ctx context.Context, dEnv *env.DoltEnv, apr *argparser.ArgPars
 		return errhand.VerboseErrorFromError(err)
 	}
 	cli.Println(stmt)
+	
+	// If running interactively, shell out to $EDITOR to allow the user to modify the schema
+	if impArgs.op == InteractiveOp {
+		cli.Println("Running interactive mode. Please modify the schema as needed and save the file to continue.")
+		stmt, err = getStatementFromEditor(stmt)
+		if err != nil {
+			return errhand.VerboseErrorFromError(err)
+		}
+	}
 
 	if !apr.Contains(dryRunFlag) {
 		err = dEnv.UpdateWorkingRoot(ctx, root)
@@ -334,6 +344,39 @@ func importSchema(ctx context.Context, dEnv *env.DoltEnv, apr *argparser.ArgPars
 
 	return nil
 }
+
+// getStatementFromEditor opens editor to ask user to edit the schema statement. Based on the getCommitMessageFromEditor function in commands/commit.go
+func getStatementFromEditor(query string) (string, error) {
+	if cli.ExecuteWithStdioRestored == nil {
+		return query, nil
+	}
+
+	var finalQry string
+	var err error
+
+	backupEd := "vim"
+	// try getting default editor on the user system
+	if ed, edSet := os.LookupEnv("EDITOR"); edSet {
+		backupEd = ed
+	}
+	// !TODO: trying to use the configured editor from the cliCtx causes a nil pointer dereference, so we're using the default editor for now
+	editorStr := backupEd
+	
+	cli.ExecuteWithStdioRestored(func() {
+		output, cErr := edtr.OpenCommitEditor(editorStr, query)
+		if cErr != nil {
+			err = cErr
+		}
+		finalQry = output
+	})
+
+	if err != nil {
+		return "", fmt.Errorf("Failed to open editor: %v \n Check your `EDITOR` environment variable with `echo $EDITOR` or your dolt config with `dolt config --list` to ensure that your editor is valid", err)
+	}
+
+	return finalQry, nil
+}
+
 
 func putEmptyTableWithSchema(ctx context.Context, tblName string, root *doltdb.RootValue, sch schema.Schema) (*doltdb.RootValue, errhand.VerboseError) {
 	tbl, tblExists, err := root.GetTable(ctx, tblName)
@@ -426,7 +469,7 @@ func CombineColCollections(ctx context.Context, root *doltdb.RootValue, inferred
 
 	var verr errhand.VerboseError
 	switch impOpts.op {
-	case CreateOp:
+	case CreateOp, InteractiveOp:
 		oldCols = schema.EmptyColColl
 		newCols = columnsForSchemaCreate(inferredCols, impOpts.PkCols)
 	case UpdateOp:
