@@ -87,19 +87,19 @@ repo/
 }
 ```
 
-#### Strategy 3: Compressed Chunking (Storage Optimized)
+#### Strategy 3: Git LFS Chunking (Very Large Files)
 ```json
 {
   "table": "large_data",
-  "chunking": "compressed",
-  "compression": "gzip",
-  "max_chunk_size": "50MB",
+  "chunking": "lfs",
+  "lfs_enabled": true,
+  "max_chunk_size": "80MB",
   "chunks": [
     {
-      "file": "large_data_000001.csv.gz",
-      "uncompressed_size": 150000000,
-      "compressed_size": 45000000,
-      "rows": 500000
+      "file": "large_data_000001.csv",
+      "size": 150000000,
+      "rows": 500000,
+      "lfs_pointer": true
     }
   ]
 }
@@ -132,14 +132,15 @@ type ChunkInfo struct {
     SizeBytes   int64
     RowRange    [2]int64  // [start, end] row indices
     Filter      string    // SQL WHERE clause for column-based chunking
+    LfsPointer  bool      // true if file should use Git LFS
 }
 ```
 
-#### 3. Export Pipeline
+#### 3. Push Pipeline
 ```go
-func (gb *GitBridge) Export(ctx context.Context, doltRepo *env.DoltEnv, gitRepoURL string, opts ExportOptions) error {
-    // 1. Clone or create Git repository
-    gitRepo := gb.prepareGitRepo(gitRepoURL)
+func (gb *GitBridge) Push(ctx context.Context, doltRepo *env.DoltEnv, gitRepoURL string, opts PushOptions) error {
+    // 1. Open or clone Git repository
+    gitRepo := gb.ensureGitRepo(gitRepoURL)
     
     // 2. Export metadata and schema
     gb.exportMetadata(doltRepo, gitRepo)
@@ -155,50 +156,42 @@ func (gb *GitBridge) Export(ctx context.Context, doltRepo *env.DoltEnv, gitRepoU
         gb.exportTable(ctx, doltRepo, tableName, strategy, gitRepo)
     }
     
-    // 6. Commit and push changes
-    return gb.commitAndPush(gitRepo, "Export from Dolt")
+    // 6. Git add, commit and push changes
+    return gb.addCommitPush(gitRepo, opts.CommitMessage)
 }
 ```
 
 ### Commands Interface
 
-#### Export Command
+#### Git-Native Commands
 ```bash
-# Basic export
-dolt git export github.com/user/dataset-repo
+# Clone a dataset repository
+dolt git clone github.com/user/dataset-repo [directory]
 
-# With custom chunking
-dolt git export --chunk-size=25MB github.com/user/dataset-repo
+# Add changes to staging area
+dolt git add .
+dolt git add table_name
 
-# Column-based chunking for time series data
-dolt git export --chunk-by=date_column github.com/user/dataset-repo
+# Commit changes with message
+dolt git commit -m "Update dataset with new records"
 
-# Compressed export
-dolt git export --compress=gzip github.com/user/dataset-repo
-```
+# Push changes to remote
+dolt git push origin main
+dolt git push --chunk-size=25MB origin main
 
-#### Import Command  
-```bash
-# Basic import
-dolt git import github.com/user/dataset-repo
+# Pull changes from remote  
+dolt git pull origin main
 
-# Import to specific directory
-dolt git import github.com/user/dataset-repo ./imported-data
+# Check status of working directory
+dolt git status
 
-# Import specific tables only
-dolt git import --tables=users,orders github.com/user/dataset-repo
-```
+# View commit history
+dolt git log
+dolt git log --oneline
 
-#### Sync Command
-```bash
-# Bidirectional sync
-dolt git sync github.com/user/dataset-repo
-
-# Push-only sync
-dolt git sync --push-only github.com/user/dataset-repo
-
-# Pull-only sync  
-dolt git sync --pull-only github.com/user/dataset-repo
+# Configure chunking for specific tables
+dolt git config table.large_table.chunk-size 80MB
+dolt git config table.events.chunk-by date_column
 ```
 
 ### Chunking Algorithm
@@ -234,6 +227,7 @@ func (s *SizeBasedChunking) CreateChunks(ctx context.Context, table string, read
                 RowCount:  currentRows,
                 SizeBytes: currentSize,
                 RowRange:  [2]int64{startRow, startRow + currentRows - 1},
+                LfsPointer: currentSize > 80*1024*1024, // Use LFS for files > 80MB
             }
             chunks = append(chunks, chunkInfo)
             
@@ -253,6 +247,7 @@ func (s *SizeBasedChunking) CreateChunks(ctx context.Context, table string, read
             RowCount:  currentRows, 
             SizeBytes: currentSize,
             RowRange:  [2]int64{startRow, startRow + currentRows - 1},
+            LfsPointer: currentSize > 80*1024*1024, // Use LFS for files > 80MB
         }
         chunks = append(chunks, chunkInfo)
     }
@@ -282,10 +277,11 @@ type RepositoryMetadata struct {
 }
 
 // Extend for Git-specific needs
-type GitExportMetadata struct {
+type GitRepositoryMetadata struct {
     RepositoryMetadata
     ChunkingStrategy string            `json:"chunking_strategy"`
     MaxChunkSize     int64             `json:"max_chunk_size"`
+    LfsEnabled       bool              `json:"lfs_enabled"`
     Tables          []TableMetadata    `json:"tables"`
 }
 ```
@@ -296,13 +292,14 @@ type GitExportMetadata struct {
 - **Streaming processing**: Process tables in chunks to avoid memory issues
 - **Parallel processing**: Export multiple tables concurrently
 - **Incremental updates**: Only re-export changed chunks
-- **Compression ratios**: Monitor and optimize chunk sizes based on content
+- **Git-native efficiency**: Let Git handle compression and delta storage
 
 ### Git Operations
-- **Shallow clones**: Use shallow clones for faster initial operations
-- **LFS integration**: Consider Git LFS for very large chunks
+- **Shallow clones**: Use shallow clones for faster initial operations  
+- **LFS integration**: Automatic LFS for chunks >80MB
 - **Batch commits**: Group related changes into single commits
 - **Progress reporting**: Show progress for long-running operations
+- **Native Git commands**: Mirror standard Git workflow
 
 ## Error Handling and Recovery
 
@@ -351,26 +348,26 @@ type GitExportMetadata struct {
 
 ## Implementation Timeline
 
-### Phase 1: Core Export (Week 1)
-- Basic Git repository creation and file writing
-- Size-based chunking implementation
-- Metadata and schema export
-- Single table export functionality
+### Phase 1: Core Git Commands (Week 1)
+- `dolt git clone` - Clone repositories from Git
+- `dolt git push` - Push Dolt changes to Git
+- Size-based chunking with Git LFS integration
+- Metadata and schema handling
 
-### Phase 2: Import and Basic Sync (Week 2)
-- Git repository reading and parsing
-- Chunk reassembly logic
-- Basic table import functionality
-- Bidirectional sync foundation
+### Phase 2: Full Git Workflow (Week 2)
+- `dolt git pull` - Pull changes from Git repositories
+- `dolt git add` - Stage table changes
+- `dolt git commit` - Commit with proper messaging
+- `dolt git status` - Show working directory status
 
 ### Phase 3: Advanced Features (Week 3)
+- `dolt git log` - View commit history
 - Multiple chunking strategies
-- Compression support
+- Git configuration integration
 - Error handling and recovery
-- Performance optimizations
 
 ### Phase 4: Production Readiness (Week 4)
 - Comprehensive testing
 - Documentation and examples
 - Performance benchmarking
-- Security review
+- Git hosting platform compatibility

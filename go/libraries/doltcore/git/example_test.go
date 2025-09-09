@@ -93,7 +93,7 @@ func TestSizeBasedChunking(t *testing.T) {
 	reader := NewMockTableReader(100000)
 
 	// Create size-based chunking strategy with 5MB chunks for testing
-	strategy := NewSizeBasedChunking(5*1024*1024, "none") // 5MB chunks
+	strategy := NewSizeBasedChunking(5 * 1024 * 1024) // 5MB chunks
 
 	t.Logf("Creating chunks for large table...")
 
@@ -179,8 +179,8 @@ func TestSizeBasedChunking(t *testing.T) {
 	t.Logf("Successfully reassembled and verified %d rows", readRows)
 }
 
-// TestCompressedChunking tests chunking with gzip compression
-func TestCompressedChunking(t *testing.T) {
+// TestLargeFileChunking tests chunking with large files suitable for Git LFS
+func TestLargeFileChunking(t *testing.T) {
 	ctx := context.Background()
 
 	tempDir, err := os.MkdirTemp("", "dolt_git_compressed_chunking_test")
@@ -189,39 +189,38 @@ func TestCompressedChunking(t *testing.T) {
 	}
 	defer os.RemoveAll(tempDir)
 
-	outputDir := filepath.Join(tempDir, "data", "compressed_table")
+	outputDir := filepath.Join(tempDir, "data", "large_table")
 
 	// Create test data
-	reader := NewMockTableReader(10000) // Smaller dataset for compression test
+	reader := NewMockTableReader(10000) // Smaller dataset for large file test
 
-	// Create compressed chunking strategy
-	strategy := NewSizeBasedChunking(1*1024*1024, "gzip") // 1MB chunks with compression
+	// Create chunking strategy for large files
+	strategy := NewSizeBasedChunking(1 * 1024 * 1024) // 1MB chunks
 
-	chunks, err := strategy.CreateChunks(ctx, "compressed_table", reader, outputDir)
+	chunks, err := strategy.CreateChunks(ctx, "large_table", reader, outputDir)
 	if err != nil {
-		t.Fatalf("Failed to create compressed chunks: %v", err)
+		t.Fatalf("Failed to create large file chunks: %v", err)
 	}
 
-	t.Logf("Created %d compressed chunks:", len(chunks))
+	t.Logf("Created %d chunks for large table:", len(chunks))
 	for i, chunk := range chunks {
-		t.Logf("  Chunk %d: %s (compressed: %d bytes, uncompressed: %d bytes, ratio: %.2f)",
-			i+1, chunk.FileName, chunk.SizeBytes, chunk.UncompressedSize,
-			float64(chunk.SizeBytes)/float64(chunk.UncompressedSize))
+		t.Logf("  Chunk %d: %s (%d bytes, %d rows)",
+			i+1, chunk.FileName, chunk.SizeBytes, chunk.RowCount)
 
-		// Verify file has .gz extension
-		if chunk.CompressionType == "gzip" && !filepath.Ext(chunk.FileName) == ".gz" {
-			t.Errorf("Compressed chunk should have .gz extension: %s", chunk.FileName)
+		// Verify file has .csv extension for Git compatibility
+		if filepath.Ext(chunk.FileName) != ".csv" {
+			t.Errorf("Git chunk should have .csv extension: %s", chunk.FileName)
 		}
 	}
 
-	// Test reading compressed chunks
+	// Test reading large file chunks
 	reassembledReader, err := strategy.ReassembleChunks(ctx, chunks, outputDir)
 	if err != nil {
-		t.Fatalf("Failed to reassemble compressed chunks: %v", err)
+		t.Fatalf("Failed to reassemble large file chunks: %v", err)
 	}
 	defer reassembledReader.Close(ctx)
 
-	// Count rows to verify compression didn't lose data
+	// Count rows to verify chunking didn't lose data
 	rowCount := int64(0)
 	for {
 		_, err := reassembledReader.ReadSqlRow(ctx)
@@ -229,16 +228,16 @@ func TestCompressedChunking(t *testing.T) {
 			break
 		}
 		if err != nil {
-			t.Fatalf("Error reading compressed data: %v", err)
+			t.Fatalf("Error reading chunked data: %v", err)
 		}
 		rowCount++
 	}
 
 	if rowCount != 10000 {
-		t.Errorf("Expected 10000 rows from compressed chunks, got %d", rowCount)
+		t.Errorf("Expected 10000 rows from chunked files, got %d", rowCount)
 	}
 
-	t.Logf("Successfully verified %d rows from compressed chunks", rowCount)
+	t.Logf("Successfully verified %d rows from chunked files", rowCount)
 }
 
 // TestChunkingStrategyFactory tests the factory pattern for creating strategies
@@ -247,8 +246,7 @@ func TestChunkingStrategyFactory(t *testing.T) {
 
 	// Test size-based strategy creation
 	options := map[string]interface{}{
-		"max_size":    int64(10 * 1024 * 1024), // 10MB
-		"compression": "gzip",
+		"max_size": int64(10 * 1024 * 1024), // 10MB
 	}
 
 	strategy, err := factory.CreateStrategy("size_based", options)
@@ -297,7 +295,7 @@ func ExampleChunkingWorkflow() {
 	dataDir := filepath.Join(tempDir, "data", "large_dataset")
 
 	// 3. Choose chunking strategy based on table size and Git hosting limits
-	strategy := NewSizeBasedChunking(50*1024*1024, "gzip") // 50MB compressed chunks
+	strategy := NewSizeBasedChunking(50 * 1024 * 1024) // 50MB chunks (Git will handle compression)
 
 	// 4. Create chunks for the table
 	chunks, err := strategy.CreateChunks(ctx, "large_dataset", tableReader, dataDir)
@@ -312,35 +310,28 @@ func ExampleChunkingWorkflow() {
 	fmt.Printf("Chunks created: %d\n", len(chunks))
 
 	totalRows := int64(0)
-	totalCompressed := int64(0)
-	totalUncompressed := int64(0)
+	totalSize := int64(0)
 
 	for i, chunk := range chunks {
 		totalRows += chunk.RowCount
-		totalCompressed += chunk.SizeBytes
-		totalUncompressed += chunk.UncompressedSize
+		totalSize += chunk.SizeBytes
 
-		fmt.Printf("  %s: %d rows, %.1fMB compressed (%.1fMB uncompressed)\n",
+		fmt.Printf("  %s: %d rows, %.1fMB\n",
 			chunk.FileName, chunk.RowCount,
-			float64(chunk.SizeBytes)/(1024*1024),
-			float64(chunk.UncompressedSize)/(1024*1024))
+			float64(chunk.SizeBytes)/(1024*1024))
 	}
 
-	compressionRatio := float64(totalCompressed) / float64(totalUncompressed)
 	fmt.Printf("\nSummary:\n")
 	fmt.Printf("  Total rows: %d\n", totalRows)
-	fmt.Printf("  Total size: %.1fMB compressed (%.1fMB uncompressed)\n",
-		float64(totalCompressed)/(1024*1024),
-		float64(totalUncompressed)/(1024*1024))
-	fmt.Printf("  Compression ratio: %.2f\n", compressionRatio)
-	fmt.Printf("  All chunks under GitHub's 100MB limit: %v\n", totalCompressed < 100*1024*1024)
+	fmt.Printf("  Total size: %.1fMB (Git will compress internally)\n",
+		float64(totalSize)/(1024*1024))
+	fmt.Printf("  All chunks under GitHub's 100MB limit: %v\n", totalSize < 100*1024*1024)
 
 	// 5. Create metadata file (would be saved as large_dataset.json in Git repo)
 	metadata := TableMetadata{
 		TableName:        "large_dataset",
 		ChunkingStrategy: strategy.GetStrategyName(),
 		MaxChunkSize:     50 * 1024 * 1024,
-		CompressionType:  "gzip",
 		Chunks:           chunks,
 		CreatedAt:        time.Now(),
 	}
@@ -353,15 +344,14 @@ func ExampleChunkingWorkflow() {
 	// ==================
 	// Table: large_dataset
 	// Chunks created: 3
-	//   large_dataset_000001.csv.gz: 83333 rows, 20.1MB compressed (40.2MB uncompressed)
-	//   large_dataset_000002.csv.gz: 83333 rows, 20.1MB compressed (40.2MB uncompressed)
-	//   large_dataset_000003.csv.gz: 83334 rows, 20.1MB compressed (40.2MB uncompressed)
+	//   large_dataset_000001.csv: 83333 rows, 40.2MB
+	//   large_dataset_000002.csv: 83333 rows, 40.2MB
+	//   large_dataset_000003.csv: 83334 rows, 40.2MB
 	//
 	// Summary:
 	//   Total rows: 250000
-	//   Total size: 60.3MB compressed (120.6MB uncompressed)
-	//   Compression ratio: 0.50
-	//   All chunks under GitHub's 100MB limit: true
+	//   Total size: 120.6MB (Git will compress internally)
+	//   All chunks under GitHub's 100MB limit: false
 	//
 	// Metadata created: size_based strategy with 3 chunks
 }
