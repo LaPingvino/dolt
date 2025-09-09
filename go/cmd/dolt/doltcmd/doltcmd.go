@@ -18,6 +18,7 @@ import (
 	"github.com/dolthub/dolt/go/cmd/dolt/cli"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/admin"
+	"github.com/dolthub/dolt/go/cmd/dolt/commands/bundlecmds"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/ci"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/cnfcmds"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/credcmds"
@@ -53,6 +54,7 @@ var doltSubCommands = []cli.Command{
 	commands.CherryPickCmd{},
 	commands.RevertCmd{},
 	commands.CloneCmd{},
+	bundlecmds.NewBundleCmd(),
 	commands.FetchCmd{},
 	commands.PullCmd{},
 	commands.PushCmd{},
