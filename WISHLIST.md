@@ -70,6 +70,47 @@ The following commands will be modified or added to support the JJ-style workflo
 
 A bundle is a single file that you can clone from and push to, like git bundles. This makes it easier to clone and share datasets. If this uses sqlite, the sqlite file could just contain a checkout plus a table with the contents of the .dolt directory. A dolt bundle fsck command could fix discrepancies that come from manual manipulation of the bundle outside of dolt.
 
+### Design
+
+Bundle files are SQLite-based archives that contain complete Dolt repositories, including:
+
+* **Complete Repository Data:** All commits, branches, and repository history
+* **Working Set Data:** Current table data and schemas
+* **Compressed Storage:** Gzip compression for efficient file sizes
+* **Metadata:** Creation info, descriptions, and source repository details
+
+### Implementation Progress
+
+**Phase 1: Core Bundle Infrastructure**
+
+* [x] `BundleFile` data format implementation
+* [x] SQLite-based bundle reader/writer with compression
+* [x] Repository data archival (complete .dolt directory)
+* [x] Bundle metadata storage and retrieval
+* [x] Integration with existing data movement infrastructure
+
+**Phase 2: Bundle Commands**
+
+* [x] `dolt bundle create` - Create bundles from repositories
+* [x] `dolt bundle clone` - Clone repositories from bundles  
+* [x] `dolt bundle info` - Inspect bundle contents and metadata
+* [x] Command integration and CLI interface
+* [⚠️] Final compilation and integration fixes needed
+
+**Status:** 🔄 **IN PROGRESS** - Core bundle functionality implemented, final integration pending.
+
+**Usage Examples:**
+```bash
+# Create a bundle from current repository
+dolt bundle create --description "Dataset v1.0" dataset.bundle
+
+# Clone repository from bundle
+dolt bundle clone dataset.bundle my-dataset
+
+# View bundle information
+dolt bundle info dataset.bundle
+```
+
 ## Clone from/to Git(hub)
 
 It would be nice to be able to clone a dataset from github or gitlab, or from a local git repository. This would be useful for sharing datasets with collaborators, and for cloning a dataset from a remote server without having to rely on Dolthub specifically, and to add support for gitea, gitlab and forgejo, instead of needing to do a Doltlab installation etc.
