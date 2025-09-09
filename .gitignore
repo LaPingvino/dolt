@@ -21,4 +21,8 @@ integration-tests/bats/batsee_results
 CLAUDE.md
 
 *~
-.dir-locals.el
+.dir-locals.el# Build artifacts
+go/cmd/dolt/dolt
+*.exe
+*.so
+*.dylib
