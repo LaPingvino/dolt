@@ -24,6 +24,7 @@ import (
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/credcmds"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/cvcmds"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/docscmds"
+	"github.com/dolthub/dolt/go/cmd/dolt/commands/gitcmds"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/indexcmds"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/schcmds"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands/sqlserver"
@@ -55,6 +56,7 @@ var doltSubCommands = []cli.Command{
 	commands.RevertCmd{},
 	commands.CloneCmd{},
 	bundlecmds.NewBundleCmd(),
+	gitcmds.NewGitCmd(),
 	commands.FetchCmd{},
 	commands.PullCmd{},
 	commands.PushCmd{},

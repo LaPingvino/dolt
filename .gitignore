@@ -26,3 +26,5 @@ go/cmd/dolt/dolt
 *.exe
 *.so
 *.dylib
+dolt
+go/cmd/dolt/dolt

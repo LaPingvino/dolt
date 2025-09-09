@@ -253,12 +253,16 @@ func (c *ColumnBasedChunking) ShouldChunk(tableName string, estimatedSize int64)
 func (c *ColumnBasedChunking) CreateChunks(ctx context.Context, tableName string, reader TableReader, outputDir string) ([]ChunkInfo, error) {
 	// Column-based chunking implementation would require SQL query capabilities
 	// For now, fall back to size-based chunking
-	sizeChunking := NewSizeBasedChunking(c.MaxChunkSize, "none")
+	sizeChunking := NewSizeBasedChunking(c.MaxChunkSize)
 	return sizeChunking.CreateChunks(ctx, tableName, reader, outputDir)
 }
 
 func (c *ColumnBasedChunking) ReassembleChunks(ctx context.Context, chunks []ChunkInfo, inputDir string) (TableReader, error) {
-	return NewMultiChunkReader(chunks, inputDir, "none")
+	reader, err := NewMultiChunkReader(chunks, inputDir)
+	if err != nil {
+		return nil, err
+	}
+	return reader, nil
 }
 
 // Helper functions
@@ -427,7 +431,7 @@ type ChunkingStrategyFactory struct{}
 func (f *ChunkingStrategyFactory) CreateStrategy(strategyType string, options map[string]interface{}) (ChunkingStrategy, error) {
 	switch strategyType {
 	case "size_based":
-		maxSize := DefaultMaxChunkSize
+		maxSize := int64(DefaultMaxChunkSize)
 		if v, ok := options["max_size"].(int64); ok {
 			maxSize = v
 		}
