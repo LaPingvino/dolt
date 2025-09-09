@@ -79,19 +79,23 @@ type ChunkingStrategy interface {
 - **GitHub compatibility**: All chunks stay well under 100MB limit
 - **Data fidelity**: 100% accuracy in export/import cycles
 
-### 🔧 **Flexible Configuration**
+### 🔧 **Git-Native Commands**
 ```bash
-# Basic export with default settings
-dolt git export github.com/user/dataset-repo
+# Clone a dataset repository from Git
+dolt git clone github.com/user/dataset-repo
 
-# Custom chunk size for different hosting limits  
-dolt git export --chunk-size=25MB github.com/user/dataset-repo
+# Add and commit changes using familiar Git workflow
+dolt git add .
+dolt git commit -m "Update dataset with new records"
 
-# Column-based chunking for time series data
-dolt git export --chunk-by=date_column github.com/user/dataset-repo
+# Push changes to remote repository
+dolt git push origin main
 
-# Compressed export for storage optimization
-dolt git export --compress=gzip github.com/user/dataset-repo
+# Pull changes from remote repository  
+dolt git pull origin main
+
+# Custom chunk size for different hosting limits
+dolt git push --chunk-size=25MB origin main
 ```
 
 ## Implementation Status
@@ -116,9 +120,13 @@ dolt git export --compress=gzip github.com/user/dataset-repo
 
 #### Git Bridge Commands (Estimated: 1-2 weeks)
 ```bash
-dolt git export <repo-url>    # Export Dolt → Git
-dolt git import <repo-url>    # Import Git → Dolt  
-dolt git sync <repo-url>      # Bidirectional sync
+dolt git clone <repo-url>     # Clone Git repository to Dolt
+dolt git push <remote>        # Push Dolt changes to Git
+dolt git pull <remote>        # Pull Git changes to Dolt
+dolt git add <table>          # Stage table changes
+dolt git commit -m <msg>      # Commit staged changes
+dolt git status               # Show working directory status
+dolt git log                  # Show commit history
 ```
 
 #### Integration Points
@@ -131,42 +139,48 @@ dolt git sync <repo-url>      # Bidirectional sync
 
 ### **Scenario 1: Research Data Sharing**
 ```bash
-# Research team exports 5GB census dataset
+# Research team shares 5GB census dataset via GitHub
 cd census-2024-analysis/
-dolt git export github.com/research-team/census-2024-data --compress=gzip
+dolt git add .
+dolt git commit -m "Add 2024 census data analysis"
+dolt git push github.com/research-team/census-2024-data
 
 # Dataset becomes:
-# - 47 compressed chunks (~40MB each)
-# - Complete schema preservation  
-# - Full commit history
-# - Easy collaboration via GitHub
+# - Automatically chunked CSV files (~50MB each)
+# - Complete schema preservation in metadata
+# - Full commit history via Git
+# - Easy collaboration via GitHub pull requests
 ```
 
 ### **Scenario 2: Transit Agency Data**
 ```bash
-# GTFS data with automatic chunking by date ranges
-dolt git export --chunk-by=service_date github.com/transit-authority/gtfs-data
+# GTFS data with automatic chunking for Git compatibility
+dolt git add gtfs_data
+dolt git commit -m "Update GTFS feed for Q4 2024"
+dolt git push github.com/transit-authority/gtfs-data
 
-# Results in logical chunks:
-# - routes_weekday.csv.gz
-# - routes_weekend.csv.gz  
-# - stops_by_region_north.csv.gz
-# - stops_by_region_south.csv.gz
+# Results in Git-friendly files:
+# - routes_000001.csv, routes_000002.csv (chunked by size)
+# - stops_000001.csv, stops_000002.csv
+# - Human-readable CSV files for easy review on GitHub
 ```
 
 ### **Scenario 3: Open Dataset Publishing**
 ```bash
 # Government agency publishes monthly economic data
-dolt git export github.com/gov-agency/economic-indicators
+dolt git add economic_indicators
+dolt git commit -m "Add Q4 2024 economic indicators"
+dolt git push github.com/gov-agency/economic-indicators
 # Automatic chunking keeps files under GitHub limits
 # Citizens can clone, analyze, and contribute via standard Git workflows
+# Plain CSV files are directly viewable and editable on GitHub
 ```
 
 ## Technical Advantages
 
 ### **Leveraging Bundle Experience**
-- **Proven patterns**: Reuses successful metadata/compression approaches from bundle implementation
-- **Robust error handling**: Battle-tested data integrity strategies
+- **Proven patterns**: Reuses successful metadata and chunking approaches from bundle implementation
+- **Robust error handling**: Battle-tested data integrity strategies  
 - **Performance optimization**: Streaming processing to handle massive datasets
 - **Modular design**: Clean separation of concerns for maintainability
 
@@ -185,15 +199,16 @@ dolt git export github.com/gov-agency/economic-indicators
 
 ### **Network Optimization**
 - **Incremental updates**: Only changed chunks need re-upload
-- **Compression benefits**: Significant bandwidth savings
+- **Git's native compression**: Delta compression handled by Git internally
 - **Resumable operations**: Failed uploads can be resumed from last chunk
+- **Human-readable format**: Plain CSV files for direct GitHub viewing
 
 ## Future Enhancements
 
 ### **Advanced Chunking Strategies**
 - **ML-based optimization**: Predict optimal chunk sizes based on data characteristics
 - **Semantic chunking**: Split data by meaningful business boundaries
-- **Adaptive compression**: Choose best compression algorithm per chunk type
+- **Intelligent Git LFS**: Automatic LFS usage for chunks exceeding size thresholds
 
 ### **Git Platform Integration**
 - **GitHub Actions**: Automated data validation workflows
@@ -208,10 +223,11 @@ The Git integration with chunking represents a significant advancement in Dolt's
 **Key Benefits:**
 - 🌐 **Universal compatibility** with all Git hosting platforms
 - 📈 **Unlimited scale** through intelligent chunking  
-- 🔒 **Perfect fidelity** in export/import cycles
-- ⚡ **High performance** with compression and streaming
+- 🔒 **Perfect fidelity** in push/pull cycles
+- ⚡ **High performance** with Git's native compression and streaming
 - 🤝 **Team collaboration** via familiar Git workflows
+- 👁️ **Human readability** with plain CSV files viewable on GitHub
 
-The implementation builds directly on the successful bundle architecture while addressing the unique challenges of Git's file-based storage model. With core chunking infrastructure complete, the next phase focuses on Git repository operations and user-facing commands.
+The implementation builds directly on the successful bundle architecture while leveraging Git's native strengths for compression and version control. With core chunking infrastructure complete, the next phase focuses on Git-native command implementations.
 
-**Status**: Core chunking engine complete, Git bridge commands ready for implementation.
+**Status**: Core chunking engine complete, Git-native commands ready for implementation.
