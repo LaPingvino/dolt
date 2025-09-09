@@ -15,7 +15,6 @@
 package git
 
 import (
-	"compress/gzip"
 	"context"
 	"encoding/csv"
 	"fmt"
@@ -31,7 +30,6 @@ import (
 const (
 	DefaultMaxChunkSize = 50 * 1024 * 1024 // 50MB default chunk size
 	ChunkFileFormat     = "%s_%06d.csv"    // table_000001.csv
-	CompressedFormat    = "%s_%06d.csv.gz" // table_000001.csv.gz
 )
 
 // ChunkingStrategy defines how to split large tables for Git storage
@@ -51,14 +49,12 @@ type ChunkingStrategy interface {
 
 // ChunkInfo describes a single chunk of table data
 type ChunkInfo struct {
-	FileName         string            `json:"file_name"`
-	RowCount         int64             `json:"row_count"`
-	SizeBytes        int64             `json:"size_bytes"`
-	RowRange         [2]int64          `json:"row_range,omitempty"`   // [start, end] for size-based
-	Filter           string            `json:"filter,omitempty"`      // SQL WHERE clause for column-based
-	CompressionType  string            `json:"compression,omitempty"` // "gzip", "none"
-	UncompressedSize int64             `json:"uncompressed_size,omitempty"`
-	Metadata         map[string]string `json:"metadata,omitempty"`
+	FileName  string            `json:"file_name"`
+	RowCount  int64             `json:"row_count"`
+	SizeBytes int64             `json:"size_bytes"`
+	RowRange  [2]int64          `json:"row_range,omitempty"` // [start, end] for size-based
+	Filter    string            `json:"filter,omitempty"`    // SQL WHERE clause for column-based
+	Metadata  map[string]string `json:"metadata,omitempty"`
 }
 
 // TableMetadata contains information about a table's chunking
@@ -67,7 +63,6 @@ type TableMetadata struct {
 	ChunkingStrategy string      `json:"chunking_strategy"`
 	MaxChunkSize     int64       `json:"max_chunk_size,omitempty"`
 	PartitionColumn  string      `json:"partition_column,omitempty"`
-	CompressionType  string      `json:"compression_type,omitempty"`
 	Chunks           []ChunkInfo `json:"chunks"`
 	Schema           string      `json:"schema"` // Table schema as SQL DDL
 	CreatedAt        time.Time   `json:"created_at"`
@@ -82,18 +77,16 @@ type TableReader interface {
 
 // SizeBasedChunking splits tables based on file size limits
 type SizeBasedChunking struct {
-	MaxChunkSize    int64
-	CompressionType string
+	MaxChunkSize int64
 }
 
 // NewSizeBasedChunking creates a new size-based chunking strategy
-func NewSizeBasedChunking(maxSize int64, compression string) *SizeBasedChunking {
+func NewSizeBasedChunking(maxSize int64) *SizeBasedChunking {
 	if maxSize <= 0 {
 		maxSize = DefaultMaxChunkSize
 	}
 	return &SizeBasedChunking{
-		MaxChunkSize:    maxSize,
-		CompressionType: compression,
+		MaxChunkSize: maxSize,
 	}
 }
 
@@ -188,31 +181,18 @@ func (s *SizeBasedChunking) CreateChunks(ctx context.Context, tableName string, 
 
 func (s *SizeBasedChunking) ReassembleChunks(ctx context.Context, chunks []ChunkInfo, inputDir string) (TableReader, error) {
 	// Create a multi-chunk reader that can read from multiple CSV files
-	return NewMultiChunkReader(chunks, inputDir, s.CompressionType)
+	return NewMultiChunkReader(chunks, inputDir)
 }
 
 func (s *SizeBasedChunking) createChunkWriter(tableName string, chunkIndex int, outputDir string, headers []string) (*csv.Writer, *os.File, error) {
-	var fileName string
-	if s.CompressionType == "gzip" {
-		fileName = fmt.Sprintf(CompressedFormat, tableName, chunkIndex)
-	} else {
-		fileName = fmt.Sprintf(ChunkFileFormat, tableName, chunkIndex)
-	}
-
+	fileName := fmt.Sprintf(ChunkFileFormat, tableName, chunkIndex)
 	filePath := filepath.Join(outputDir, fileName)
 	file, err := os.Create(filePath)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var writer io.Writer = file
-	if s.CompressionType == "gzip" {
-		gzWriter := gzip.NewWriter(file)
-		writer = gzWriter
-		// Note: gzWriter needs to be closed separately
-	}
-
-	csvWriter := csv.NewWriter(writer)
+	csvWriter := csv.NewWriter(file)
 
 	// Write CSV header
 	if err := csvWriter.Write(headers); err != nil {
@@ -236,15 +216,10 @@ func (s *SizeBasedChunking) finalizeChunk(tableName string, chunkIndex int, rowC
 	}
 
 	chunk := ChunkInfo{
-		FileName:        fileName,
-		RowCount:        rowCount,
-		SizeBytes:       stat.Size(),
-		RowRange:        [2]int64{startRow, startRow + rowCount - 1},
-		CompressionType: s.CompressionType,
-	}
-
-	if s.CompressionType == "gzip" {
-		chunk.UncompressedSize = sizeBytes
+		FileName:  fileName,
+		RowCount:  rowCount,
+		SizeBytes: stat.Size(),
+		RowRange:  [2]int64{startRow, startRow + rowCount - 1},
 	}
 
 	return chunk, nil
@@ -328,7 +303,6 @@ func estimateRowSize(rowData []string) int64 {
 type MultiChunkReader struct {
 	chunks        []ChunkInfo
 	inputDir      string
-	compression   string
 	currentIdx    int
 	currentFile   *os.File
 	currentReader *csv.Reader
@@ -337,16 +311,15 @@ type MultiChunkReader struct {
 }
 
 // NewMultiChunkReader creates a reader that can read from multiple CSV chunks
-func NewMultiChunkReader(chunks []ChunkInfo, inputDir, compression string) (*MultiChunkReader, error) {
+func NewMultiChunkReader(chunks []ChunkInfo, inputDir string) (*MultiChunkReader, error) {
 	if len(chunks) == 0 {
 		return nil, fmt.Errorf("no chunks to read")
 	}
 
 	reader := &MultiChunkReader{
-		chunks:      chunks,
-		inputDir:    inputDir,
-		compression: compression,
-		currentIdx:  0,
+		chunks:     chunks,
+		inputDir:   inputDir,
+		currentIdx: 0,
 	}
 
 	// Open first chunk to read headers and determine schema
@@ -378,17 +351,7 @@ func (r *MultiChunkReader) openNextChunk() error {
 		return fmt.Errorf("failed to open chunk file %s: %v", filePath, err)
 	}
 
-	var reader io.Reader = file
-	if chunk.CompressionType == "gzip" {
-		gzReader, err := gzip.NewReader(file)
-		if err != nil {
-			file.Close()
-			return fmt.Errorf("failed to create gzip reader: %v", err)
-		}
-		reader = gzReader
-	}
-
-	csvReader := csv.NewReader(reader)
+	csvReader := csv.NewReader(file)
 	r.currentFile = file
 	r.currentReader = csvReader
 
@@ -465,16 +428,11 @@ func (f *ChunkingStrategyFactory) CreateStrategy(strategyType string, options ma
 	switch strategyType {
 	case "size_based":
 		maxSize := DefaultMaxChunkSize
-		compression := "none"
-
 		if v, ok := options["max_size"].(int64); ok {
 			maxSize = v
 		}
-		if v, ok := options["compression"].(string); ok {
-			compression = v
-		}
 
-		return NewSizeBasedChunking(maxSize, compression), nil
+		return NewSizeBasedChunking(maxSize), nil
 
 	case "column_based":
 		column, ok := options["partition_column"].(string)
