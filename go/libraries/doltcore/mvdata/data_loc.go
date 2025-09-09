@@ -57,6 +57,9 @@ const (
 
 	// ParquetFile is the format of a data location that is a .paquet file
 	ParquetFile DataFormat = ".parquet"
+
+	// ZipCsvFile is the format of a data location that is a .zip file containing CSV files
+	ZipCsvFile DataFormat = ".zip"
 )
 
 // ReadableStr returns a human readable string for a DataFormat
@@ -76,6 +79,8 @@ func (df DataFormat) ReadableStr() string {
 		return "sql file"
 	case ParquetFile:
 		return "parquet file"
+	case ZipCsvFile:
+		return "zip csv file"
 	default:
 		return "invalid"
 	}
@@ -120,6 +125,8 @@ func NewDataLocation(path, fileFmtStr string) DataLocation {
 			dataFmt = SqlFile
 		case string(ParquetFile):
 			dataFmt = ParquetFile
+		case string(ZipCsvFile):
+			dataFmt = ZipCsvFile
 		}
 	}
 

@@ -107,7 +107,7 @@ If the schema for the existing table does not match the schema for the new file,
 
 A mapping file can be used to map fields between the file being imported and the table being written to. This can be used when creating a new table, or updating or replacing an existing table.
 
-During import, if there is an error importing any row, the import will be aborted by default. Use the {{.EmphasisLeft}}--continue{{.EmphasisRight}} flag to continue importing when an error is encountered. You can add the {{.EmphasisLeft}}--quiet{{.EmphasisRight}} flag to prevent the import utility from printing all the skipped rows. 
+During import, if there is an error importing any row, the import will be aborted by default. Use the {{.EmphasisLeft}}--continue{{.EmphasisRight}} flag to continue importing when an error is encountered. You can add the {{.EmphasisLeft}}--quiet{{.EmphasisRight}} flag to prevent the import utility from printing all the skipped rows.
 
 ` + schcmds.MappingFileHelp +
 		`
@@ -235,6 +235,18 @@ func getImportMoveOptions(ctx *sql.Context, apr *argparser.ArgParseResults, dEnv
 			srcOpts = opts
 		} else if val.Format == mvdata.ParquetFile {
 			opts := mvdata.ParquetOptions{TableName: tableName, SchFile: schemaFile}
+			if schemaFile != "" {
+				opts.SqlCtx = ctx
+				opts.Engine = engine
+			}
+			srcOpts = opts
+		} else if val.Format == mvdata.ZipCsvFile {
+			csvOpts := extractCsvOptions(apr, hasDelim, delim)
+			opts := mvdata.ZipCsvOptions{
+				TableName: tableName,
+				SchFile:   schemaFile,
+				CsvOpts:   csvOpts,
+			}
 			if schemaFile != "" {
 				opts.SqlCtx = ctx
 				opts.Engine = engine
@@ -451,7 +463,7 @@ func (cmd ImportCmd) Docs() *cli.CommandDocumentation {
 func (cmd ImportCmd) ArgParser() *argparser.ArgParser {
 	ap := argparser.NewArgParserWithMaxArgs(cmd.Name(), 2)
 	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{tableParam, "The new or existing table being imported to."})
-	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{fileParam, "The file being imported. Supported file types are csv, psv, and nbf."})
+	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{fileParam, "The file being imported. Supported file types are csv, psv, zip, and nbf."})
 	ap.SupportsFlag(createParam, "c", "Create a new table, or overwrite an existing table (with the -f flag) from the imported data.")
 	ap.SupportsFlag(updateParam, "u", "Update an existing table with the imported data.")
 	ap.SupportsFlag(appendParam, "a", "Require that the operation will not modify any rows in the table.")

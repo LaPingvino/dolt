@@ -56,6 +56,15 @@ type ParquetOptions struct {
 	Engine    *sqle.Engine
 }
 
+type ZipCsvOptions struct {
+	TableName     string
+	SchFile       string
+	SqlCtx        *sql.Context
+	Engine        *sqle.Engine
+	CsvOpts       CsvOptions
+	FileExtension string // ".csv" for regular CSV zips, ".txt" for GTFS files
+}
+
 type MoverOptions struct {
 	ContinueOnErr  bool
 	Force          bool

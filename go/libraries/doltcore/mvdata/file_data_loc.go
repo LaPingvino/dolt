@@ -33,6 +33,7 @@ import (
 	"github.com/dolthub/dolt/go/libraries/doltcore/table/untyped/csv"
 	"github.com/dolthub/dolt/go/libraries/doltcore/table/untyped/sqlexport"
 	"github.com/dolthub/dolt/go/libraries/doltcore/table/untyped/xlsx"
+	"github.com/dolthub/dolt/go/libraries/doltcore/table/untyped/zipcsv"
 	"github.com/dolthub/dolt/go/libraries/utils/filesys"
 )
 
@@ -51,6 +52,8 @@ func DFFromString(dfStr string) DataFormat {
 		return SqlFile
 	case "parquet", ".parquet":
 		return ParquetFile
+	case "zip", ".zip":
+		return ZipCsvFile
 	default:
 		return InvalidDataFormat
 	}
@@ -171,6 +174,16 @@ func (dl FileDataLocation) NewReader(ctx context.Context, dEnv *env.DoltEnv, opt
 		}
 		rd, rErr := parquet.OpenParquetReader(root.VRW(), dl.Path, tableSch)
 		return rd, false, rErr
+
+	case ZipCsvFile:
+		zipOpts, ok := opts.(ZipCsvOptions)
+		if !ok {
+			return nil, false, errors.New("ZipCsvOptions required for ZIP CSV import")
+		}
+
+		csvInfo := CreateCSVInfo(zipOpts.CsvOpts, ",")
+		rd, err := zipcsv.OpenZipCsvReader(root.VRW().Format(), dl.Path, fs, csvInfo)
+		return rd, false, err
 	}
 
 	return nil, false, errors.New("unsupported format")
@@ -196,6 +209,11 @@ func (dl FileDataLocation) NewCreatingWriter(ctx context.Context, mvOpts DataMov
 		}
 	case ParquetFile:
 		return parquet.NewParquetRowWriterForFile(outSch, mvOpts.DestName())
+	case ZipCsvFile:
+		csvInfo := csv.NewCSVInfo()
+		// Auto-detect GTFS vs regular CSV based on file extension preference
+		useGTFS := strings.Contains(strings.ToLower(mvOpts.DestName()), "gtfs")
+		return zipcsv.NewZipCsvWriter(wr, mvOpts.SrcName(), outSch, csvInfo, useGTFS)
 	}
 
 	panic("Invalid Data Format." + string(dl.Format))

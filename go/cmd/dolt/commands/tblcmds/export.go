@@ -173,7 +173,7 @@ func (cmd ExportCmd) Docs() *cli.CommandDocumentation {
 func (cmd ExportCmd) ArgParser() *argparser.ArgParser {
 	ap := argparser.NewArgParserWithMaxArgs(cmd.Name(), 2)
 	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{"table", "The table being exported."})
-	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{"file", "The file being output to."})
+	ap.ArgListHelp = append(ap.ArgListHelp, [2]string{"file", "The file being output to. Supported file types are csv, psv, zip, json, sql, and parquet."})
 	ap.SupportsFlag(forceParam, "f", "If data already exists in the destination, the force flag will allow the target to be overwritten.")
 	ap.SupportsString(fileTypeParam, "", "file_type", "Explicitly define the type of the file if it can't be inferred from the file extension.")
 	return ap
