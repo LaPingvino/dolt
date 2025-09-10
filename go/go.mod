@@ -22,7 +22,7 @@ require (
 	github.com/golang/snappy v0.0.4
 	github.com/google/uuid v1.6.0
 	github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d
-	github.com/mattn/go-isatty v0.0.17
+	github.com/mattn/go-isatty v0.0.20
 	github.com/mattn/go-runewidth v0.0.13
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/profile v1.5.0
@@ -75,7 +75,6 @@ require (
 	github.com/kch42/buzhash v0.0.0-20160816060738-9bdec3dec7c6
 	github.com/kylelemons/godebug v1.1.0
 	github.com/lib/pq v1.10.0
-	github.com/mattn/go-sqlite3 v1.14.7
 	github.com/mohae/uvarint v0.0.0-20160208145430-c3f9e62bf2b0
 	github.com/oracle/oci-go-sdk/v65 v65.55.0
 	github.com/prometheus/client_golang v1.13.0
@@ -93,11 +92,12 @@ require (
 	go.opentelemetry.io/otel/exporters/jaeger v1.17.0
 	go.opentelemetry.io/otel/sdk v1.36.0
 	go.opentelemetry.io/otel/trace v1.36.0
-	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
+	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b
 	golang.org/x/text v0.27.0
 	gonum.org/v1/plot v0.11.0
 	gopkg.in/go-jose/go-jose.v2 v2.6.3
 	gopkg.in/yaml.v3 v3.0.1
+	modernc.org/sqlite v1.38.2
 )
 
 require (
@@ -175,6 +175,7 @@ require (
 	github.com/mark3labs/mcp-go v0.34.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
+	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/pierrec/lz4/v4 v4.1.6 // indirect
 	github.com/pjbgf/sha1cd v0.3.2 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
@@ -183,6 +184,7 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/skeema/knownhosts v1.3.1 // indirect
 	github.com/sony/gobreaker v0.5.0 // indirect
@@ -215,6 +217,9 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250707201910-8d1bb00bc6a7 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
+	modernc.org/libc v1.66.3 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
+	modernc.org/memory v1.11.0 // indirect
 )
 
 go 1.24.6

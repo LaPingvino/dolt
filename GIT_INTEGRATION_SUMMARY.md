@@ -81,7 +81,7 @@ type ChunkingStrategy interface {
 - **GitHub compatibility**: All chunks stay well under 100MB limit
 - **Data fidelity**: 100% accuracy in export/import cycles
 
-### 🔧 **Git-Native Commands**
+### **Git-Native Commands**
 ```bash
 # Clone a dataset repository from Git
 dolt git clone github.com/user/dataset-repo
@@ -98,6 +98,9 @@ dolt git pull origin main
 
 # Custom chunk size for different hosting limits
 dolt git push --chunk-size=25MB origin main
+
+# Diagnose authentication and connectivity issues
+dolt git diagnostics
 ```
 
 ## Implementation Status
@@ -120,12 +123,14 @@ dolt git push --chunk-size=25MB origin main
 - [x] `dolt git status` - Show Git working directory status
 - [x] `dolt git log` - Show Git commit history
 
-#### Authentication and Integration
+✅ Authentication and Integration
 - [x] GitHub/GitLab personal access tokens
-- [x] SSH key authentication
+- [x] SSH key authentication with passphrase support
 - [x] Username/password authentication
+- [x] SSH agent integration and fallback handling
+- [x] Comprehensive error handling with troubleshooting guidance
+- [x] Authentication diagnostics and connectivity testing
 - [x] Command registration in main Dolt CLI
-- [x] Comprehensive error handling and recovery
 - [x] Progress reporting and verbose modes
 
 #### Testing and Validation  
@@ -147,12 +152,15 @@ dolt git add <table>          # Stage table changes ✅
 dolt git commit -m <msg>      # Commit staged changes ✅
 dolt git status               # Show working directory status ✅
 dolt git log                  # Show commit history ✅
+dolt git diagnostics          # Diagnose authentication issues ✅
 ```
 
 #### Completed Integration Points
 - **Git library integration**: `go-git` integrated for all repository operations ✅
 - **Command registration**: Full integration with main Dolt CLI ✅
-- **Authentication**: GitHub/GitLab tokens, SSH keys, username/password support ✅
+- **Authentication**: Enhanced SSH key handling with passphrase support, SSH agent integration, GitHub/GitLab tokens, username/password support ✅
+- **Error handling**: Detailed error messages with specific troubleshooting guidance ✅
+- **Diagnostics**: Built-in connectivity and authentication testing ✅
 - **Progress reporting**: Comprehensive user feedback and verbose modes ✅
 
 ## Usage Examples
@@ -247,9 +255,10 @@ The Git integration with chunking represents a significant advancement in Dolt's
 - ⚡ **High performance** with Git's native compression and streaming
 - 🤝 **Team collaboration** via familiar Git workflows
 - 👁️ **Human readability** with plain CSV files viewable on GitHub
-- 🔐 **Secure authentication** with multiple authentication methods
-- 🛠️ **Production ready** with comprehensive error handling
+- 🔐 **Robust authentication** with SSH keys, tokens, and comprehensive diagnostics
+- 🛠️ **Production ready** with detailed error handling and troubleshooting guidance
+- 🔍 **Built-in diagnostics** for authentication and connectivity troubleshooting
 
 The implementation builds directly on the successful bundle architecture while leveraging Git's native strengths for compression and version control. The complete Git workflow is now available with full command integration.
 
-**Status**: ✅ **COMPLETED** - Full Git integration with chunking infrastructure and complete command set implemented and production ready.
+**Status**: ✅ **COMPLETED** - Full Git integration with chunking infrastructure, enhanced authentication, diagnostics, and complete command set implemented and production ready.

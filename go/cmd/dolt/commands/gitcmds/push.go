@@ -18,26 +18,40 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/dolthub/dolt/go/libraries/doltcore/doltdb"
+	"github.com/dolthub/dolt/go/libraries/doltcore/doltdb/durable"
+	"github.com/dolthub/dolt/go/libraries/doltcore/env"
+	gitintegration "github.com/dolthub/dolt/go/libraries/doltcore/git"
+	"github.com/dolthub/dolt/go/libraries/doltcore/row"
+	"github.com/dolthub/dolt/go/libraries/doltcore/schema"
+	"github.com/dolthub/dolt/go/libraries/doltcore/sqle/index"
+	"github.com/dolthub/dolt/go/libraries/doltcore/table/untyped/csv"
+	"github.com/dolthub/go-mysql-server/sql"
+
+	"github.com/dolthub/dolt/go/libraries/utils/iohelp"
+	"github.com/dolthub/dolt/go/store/types"
+	eventsapi "github.com/dolthub/eventsapi_schema/dolt/services/eventsapi/v1alpha1"
 
 	"github.com/fatih/color"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/transport"
+	"github.com/go-git/go-git/v5/plumbing/transport/http"
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 
 	"github.com/dolthub/dolt/go/cmd/dolt/cli"
 	"github.com/dolthub/dolt/go/cmd/dolt/commands"
+	"github.com/dolthub/dolt/go/cmd/dolt/doltversion"
 	"github.com/dolthub/dolt/go/cmd/dolt/errhand"
-	"github.com/dolthub/dolt/go/libraries/doltcore/env"
-	gitintegration "github.com/dolthub/dolt/go/libraries/doltcore/git"
+
 	"github.com/dolthub/dolt/go/libraries/utils/argparser"
-	eventsapi "github.com/dolthub/eventsapi_schema/dolt/services/eventsapi/v1alpha1"
 )
 
 var pushDocs = cli.CommandDocumentationContent{
@@ -369,68 +383,120 @@ func exportTable(ctx context.Context, dEnv *env.DoltEnv, tableName string, dataD
 		return nil, fmt.Errorf("failed to create table directory: %v", err)
 	}
 
-	// TODO: Get table reader from Dolt environment
-	// For now, this is a placeholder that would need integration with Dolt's table reading infrastructure
-	// This would involve:
-	// 1. Getting the table from dEnv
-	// 2. Creating a TableReader that implements the gitintegration.TableReader interface
-	// 3. Using the chunking strategy to create chunks
+	// Get table from Dolt environment
+	root, err := dEnv.WorkingRoot(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get working root: %v", err)
+	}
 
-	// Estimate table size (placeholder - would come from actual table)
-	estimatedSize := int64(100 * 1024 * 1024) // Placeholder: 100MB
+	table, tableName, ok, err := doltdb.GetTableInsensitive(ctx, root, doltdb.TableName{Name: tableName, Schema: doltdb.DefaultSchemaName})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get table %s: %v", tableName, err)
+	}
+	if !ok {
+		return nil, fmt.Errorf("table %s not found", tableName)
+	}
+
+	// Get table schema
+	sch, err := table.GetSchema(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get schema for table %s: %v", tableName, err)
+	}
+
+	// Get row data for size estimation
+	rowData, err := table.GetRowData(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get row data for table %s: %v", tableName, err)
+	}
+
+	rowCount, err := rowData.Count()
+	if err != nil {
+		return nil, fmt.Errorf("failed to count rows in table %s: %v", tableName, err)
+	}
+
+	// Estimate size based on row count (rough estimate: 100 bytes per row average)
+	estimatedSize := int64(rowCount * 100)
 
 	var chunks []gitintegration.ChunkInfo
-	var err error
+	var actualRowCount int64 = 0
+	var actualSize int64 = 0
 
-	if chunking.ShouldChunk(tableName, estimatedSize) {
+	if chunking.ShouldChunk(tableName, estimatedSize) && rowCount > 10000 {
 		if verbose {
-			cli.Println(color.CyanString("    Table %s requires chunking (estimated size: %.1f MB)",
-				tableName, float64(estimatedSize)/(1024*1024)))
+			cli.Println(color.CyanString("    Table %s requires chunking (estimated size: %.1f MB, %d rows)",
+				tableName, float64(estimatedSize)/(1024*1024), rowCount))
 		}
 
-		// TODO: Create actual table reader and use chunking
-		// chunks, err = chunking.CreateChunks(ctx, tableName, tableReader, tableDataDir)
-		// For now, create placeholder chunks
-		chunks = []gitintegration.ChunkInfo{
-			{
-				FileName:  fmt.Sprintf("%s_000001.csv", tableName),
-				RowCount:  50000,
-				SizeBytes: 50 * 1024 * 1024,
-				RowRange:  [2]int64{1, 50000},
-			},
-			{
-				FileName:  fmt.Sprintf("%s_000002.csv", tableName),
-				RowCount:  30000,
-				SizeBytes: 30 * 1024 * 1024,
-				RowRange:  [2]int64{50001, 80000},
-			},
+		// Export in chunks
+		chunkSize := int64(50000) // rows per chunk
+		chunkNum := 0
+		rowsProcessed := int64(0)
+
+		for rowsProcessed < int64(rowCount) {
+			chunkNum++
+			chunkFileName := fmt.Sprintf("%s_%06d.csv", tableName, chunkNum)
+			chunkPath := filepath.Join(tableDataDir, chunkFileName)
+
+			// Create and export this chunk
+			chunkRowCount, chunkFileSize, err := exportTableChunk(ctx, table, sch, chunkPath, rowsProcessed, chunkSize)
+			if err != nil {
+				return nil, fmt.Errorf("failed to export chunk %d of table %s: %v", chunkNum, tableName, err)
+			}
+
+			chunks = append(chunks, gitintegration.ChunkInfo{
+				FileName:  chunkFileName,
+				RowCount:  chunkRowCount,
+				SizeBytes: chunkFileSize,
+				RowRange:  [2]int64{rowsProcessed, rowsProcessed + chunkRowCount},
+			})
+
+			actualRowCount += chunkRowCount
+			actualSize += chunkFileSize
+			rowsProcessed += chunkRowCount
+
+			if rowsProcessed >= int64(rowCount) {
+				break
+			}
 		}
 	} else {
 		if verbose {
-			cli.Println(color.CyanString("    Table %s exported as single file", tableName))
+			cli.Println(color.CyanString("    Table %s exported as single file (%d rows)", tableName, rowCount))
 		}
 
 		// Single file export
+		chunkFileName := fmt.Sprintf("%s.csv", tableName)
+		chunkPath := filepath.Join(tableDataDir, chunkFileName)
+
+		chunkRowCount, chunkFileSize, err := exportTableChunk(ctx, table, sch, chunkPath, 0, int64(rowCount))
+		if err != nil {
+			return nil, fmt.Errorf("failed to export table %s: %v", tableName, err)
+		}
+
 		chunks = []gitintegration.ChunkInfo{
 			{
-				FileName:  fmt.Sprintf("%s_000001.csv", tableName),
-				RowCount:  10000,
-				SizeBytes: 10 * 1024 * 1024,
+				FileName:  chunkFileName,
+				RowCount:  chunkRowCount,
+				SizeBytes: chunkFileSize,
 			},
 		}
+
+		actualRowCount = chunkRowCount
+		actualSize = chunkFileSize
 	}
 
+	// Generate table schema DDL
+	schemaDDL, err := generateTableDDL(sch, tableName)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to generate schema DDL for table %s: %v", tableName, err)
 	}
 
 	// Create table metadata
 	tableMetadata := &gitintegration.TableMetadata{
 		TableName:        tableName,
 		ChunkingStrategy: chunking.GetStrategyName(),
-		MaxChunkSize:     50 * 1024 * 1024, // TODO: Get from chunking strategy
+		MaxChunkSize:     gitintegration.DefaultMaxChunkSize,
 		Chunks:           chunks,
-		Schema:           "", // TODO: Get actual table schema as DDL
+		Schema:           schemaDDL,
 		CreatedAt:        time.Now(),
 	}
 
@@ -443,8 +509,8 @@ func exportTable(ctx context.Context, dEnv *env.DoltEnv, tableName string, dataD
 	return &TableGitMetadata{
 		TableName:       tableName,
 		ChunkCount:      len(chunks),
-		TotalRows:       calculateTotalRows(chunks),
-		TotalSizeBytes:  calculateTotalSize(chunks),
+		TotalRows:       actualRowCount,
+		TotalSizeBytes:  actualSize,
 		LastModified:    time.Now().Format(time.RFC3339),
 		ChunkingEnabled: len(chunks) > 1,
 		LfsEnabled:      anyChunkOverLfsThreshold(chunks),
@@ -492,12 +558,48 @@ func exportSchema(ctx context.Context, dEnv *env.DoltEnv, metadataDir string, ve
 		cli.Println(color.CyanString("Exporting database schema..."))
 	}
 
-	// TODO: Generate actual schema DDL from Dolt environment
-	// This would involve getting all table schemas and generating CREATE TABLE statements
-	schemaSQL := "-- Database schema exported from Dolt\n-- TODO: Generate actual DDL from Dolt tables\n"
+	// Get all tables from Dolt environment
+	root, err := dEnv.WorkingRoot(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get working root: %v", err)
+	}
+
+	tableNames, err := root.GetTableNames(ctx, doltdb.DefaultSchemaName, true)
+	if err != nil {
+		return fmt.Errorf("failed to get table names: %v", err)
+	}
+
+	var schemaSQL strings.Builder
+	schemaSQL.WriteString("-- Database schema exported from Dolt\n")
+	schemaSQL.WriteString(fmt.Sprintf("-- Generated at: %s\n\n", time.Now().Format(time.RFC3339)))
+
+	// Generate DDL for each table
+	for _, tableName := range tableNames {
+		table, _, ok, err := doltdb.GetTableInsensitive(ctx, root, doltdb.TableName{Name: tableName, Schema: doltdb.DefaultSchemaName})
+		if err != nil {
+			return fmt.Errorf("failed to get table %s: %v", tableName, err)
+		}
+		if !ok {
+			continue
+		}
+
+		sch, err := table.GetSchema(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to get schema for table %s: %v", tableName, err)
+		}
+
+		tableDDL, err := generateTableDDL(sch, tableName)
+		if err != nil {
+			return fmt.Errorf("failed to generate DDL for table %s: %v", tableName, err)
+		}
+
+		schemaSQL.WriteString(fmt.Sprintf("-- Table: %s\n", tableName))
+		schemaSQL.WriteString(tableDDL)
+		schemaSQL.WriteString("\n\n")
+	}
 
 	schemaPath := filepath.Join(metadataDir, "schema.sql")
-	if err := os.WriteFile(schemaPath, []byte(schemaSQL), 0644); err != nil {
+	if err := os.WriteFile(schemaPath, []byte(schemaSQL.String()), 0644); err != nil {
 		return fmt.Errorf("failed to write schema file: %v", err)
 	}
 
@@ -505,33 +607,282 @@ func exportSchema(ctx context.Context, dEnv *env.DoltEnv, metadataDir string, ve
 }
 
 // generateRepositoryMetadata creates the main repository metadata manifest
-func generateRepositoryMetadata(dEnv *env.DoltEnv, metadataDir string, tables []TableGitMetadata, gitConfig *GitConfig, verbose bool) error {
+func generateRepositoryMetadata(dEnv *env.DoltEnv, metadataDir string, tablesMetadata []TableGitMetadata, gitConfig *GitConfig, verbose bool) error {
 	if verbose {
 		cli.Println(color.CyanString("Generating repository metadata..."))
 	}
 
-	// TODO: Get actual Dolt version and current user
-	metadata := &RepositoryGitMetadata{
-		DoltVersion:    "1.32.4", // TODO: Get actual version
+	// Get actual Dolt version
+	doltVersion := doltversion.Version
+
+	// Get current user (try from environment or Git config)
+	exportedBy := "unknown"
+	if user := os.Getenv("USER"); user != "" {
+		exportedBy = user
+	} else if user := os.Getenv("USERNAME"); user != "" {
+		exportedBy = user
+	}
+
+	// Get current branch and commit
+	currentBranch := "main"
+	currentCommit := "unknown"
+
+	if dEnv.RepoState != nil {
+		if headRef, err := dEnv.RepoStateReader().CWBHeadRef(context.Background()); err == nil {
+			currentBranch = headRef.GetPath()
+			if strings.HasPrefix(currentBranch, "refs/heads/") {
+				currentBranch = strings.TrimPrefix(currentBranch, "refs/heads/")
+			}
+		}
+	}
+
+	metadata := RepositoryGitMetadata{
+		DoltVersion:    doltVersion,
 		ExportedAt:     time.Now().Format(time.RFC3339),
-		ExportedBy:     "dolt-user", // TODO: Get actual user
-		SourceBranch:   "main",      // TODO: Get current branch
-		SourceCommit:   "abc123",    // TODO: Get current commit hash
-		Tables:         tables,
+		ExportedBy:     exportedBy,
+		SourceBranch:   currentBranch,
+		SourceCommit:   currentCommit,
+		Tables:         tablesMetadata,
 		ChunkingConfig: gitConfig,
 	}
 
 	manifestPath := filepath.Join(metadataDir, "manifest.json")
-	data, err := json.MarshalIndent(metadata, "", "  ")
+	manifestData, err := json.MarshalIndent(metadata, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal metadata: %v", err)
 	}
 
-	if err := os.WriteFile(manifestPath, data, 0644); err != nil {
+	if err := os.WriteFile(manifestPath, manifestData, 0644); err != nil {
 		return fmt.Errorf("failed to write manifest file: %v", err)
 	}
 
 	return nil
+}
+
+// exportTableChunk exports a portion of a table to a CSV file
+func exportTableChunk(ctx context.Context, table *doltdb.Table, sch schema.Schema, outputPath string, offset, limit int64) (int64, int64, error) {
+	// Create output file
+	outputFile, err := os.Create(outputPath)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to create output file %s: %v", outputPath, err)
+	}
+	defer outputFile.Close()
+
+	// Create CSV writer with headers
+	csvInfo := csv.NewCSVInfo()
+	csvInfo.HasHeaderLine = true
+	csvWriter, err := csv.NewCSVWriter(iohelp.NopWrCloser(outputFile), sch, csvInfo)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to create CSV writer: %v", err)
+	}
+
+	// Get table row data
+	rowData, err := table.GetRowData(ctx)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to get row data: %v", err)
+	}
+
+	// Create SQL context for CSV operations
+	sqlCtx := sql.NewEmptyContext()
+
+	// Get all columns for data conversion
+	allCols := sch.GetAllCols()
+	colCount := allCols.Size()
+
+	// Create a map of tag to column index for efficient lookup
+	tagToIdx := make(map[uint64]int)
+	colTags := make([]uint64, colCount)
+	i := 0
+	err = allCols.Iter(func(tag uint64, col schema.Column) (bool, error) {
+		tagToIdx[tag] = i
+		colTags[i] = tag
+		i++
+		return false, nil
+	})
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to iterate schema columns: %v", err)
+	}
+
+	// Iterate through actual table data
+	rowsWritten := int64(0)
+	currentRowNum := int64(0)
+
+	// Use proper row iteration based on Dolt storage format
+	if types.IsFormat_DOLT(rowData.Format()) {
+		// For DOLT format, use prolly tree handling with proper row iterator
+		prollyMap, err := durable.ProllyMapFromIndex(rowData)
+		if err != nil {
+			return 0, 0, fmt.Errorf("failed to get prolly map: %v", err)
+		}
+
+		totalRows, err := prollyMap.Count()
+		if err != nil {
+			return 0, 0, fmt.Errorf("failed to count rows: %v", err)
+		}
+
+		if totalRows > 0 {
+			// Calculate actual range based on offset/limit
+			startIdx := uint64(0)
+			endIdx := uint64(totalRows)
+
+			if offset > 0 && uint64(offset) < uint64(totalRows) {
+				startIdx = uint64(offset)
+			}
+
+			if limit > 0 && startIdx+uint64(limit) < uint64(totalRows) {
+				endIdx = startIdx + uint64(limit)
+			}
+
+			// Use ordinal range iterator for efficient offset/limit handling
+			iter, err := prollyMap.IterOrdinalRange(ctx, startIdx, endIdx)
+			if err != nil {
+				return 0, 0, fmt.Errorf("failed to create range iterator: %v", err)
+			}
+
+			// Use proper row iterator for prolly tree data
+			rowIter := index.NewProllyRowIterForMap(sch, prollyMap, iter, nil)
+
+			// Iterate through SQL rows
+			for {
+				sqlRow, err := rowIter.Next(sqlCtx)
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					return 0, 0, fmt.Errorf("failed to read row: %v", err)
+				}
+
+				// Write row to CSV
+				err = csvWriter.WriteSqlRow(sqlCtx, sqlRow)
+				if err != nil {
+					return 0, 0, fmt.Errorf("failed to write row %d: %v", rowsWritten, err)
+				}
+
+				rowsWritten++
+			}
+		}
+	} else {
+		// For NOMS format, use proper iteration
+		nomsMap := durable.NomsMapFromIndex(rowData)
+
+		err = nomsMap.IterAll(ctx, func(key, value types.Value) error {
+			// Skip rows before offset
+			if currentRowNum < offset {
+				currentRowNum++
+				return nil
+			}
+
+			// Stop if we've reached the limit
+			if limit > 0 && rowsWritten >= limit {
+				return nil
+			}
+
+			// Convert key/value to row with proper type assertions
+			r, err := row.FromNoms(sch, key.(types.Tuple), value.(types.Tuple))
+			if err != nil {
+				return fmt.Errorf("failed to convert row data: %v", err)
+			}
+
+			// Convert row to SQL row format
+			sqlRow := make(sql.Row, colCount)
+			for j, tag := range colTags {
+				val, ok := r.GetColVal(tag)
+				if !ok || val == nil {
+					sqlRow[j] = nil
+				} else {
+					col, _ := allCols.GetByTag(tag)
+					sqlType := col.TypeInfo.ToSqlType()
+
+					// Convert the value to SQL format
+					convertedVal, _, err := sqlType.Convert(ctx, val)
+					if err != nil {
+						// If conversion fails, use string representation
+						sqlRow[j] = val.HumanReadableString()
+					} else {
+						sqlRow[j] = convertedVal
+					}
+				}
+			}
+
+			// Write row to CSV
+			err = csvWriter.WriteSqlRow(sqlCtx, sqlRow)
+			if err != nil {
+				return fmt.Errorf("failed to write row %d: %v", rowsWritten, err)
+			}
+
+			rowsWritten++
+			currentRowNum++
+			return nil
+		})
+
+		if err != nil {
+			return 0, 0, fmt.Errorf("failed to iterate table rows: %v", err)
+		}
+	}
+
+	// Close CSV writer to flush data
+	err = csvWriter.Close(ctx)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to flush CSV writer: %v", err)
+	}
+
+	// Get final file size
+	fileInfo, err := outputFile.Stat()
+	if err != nil {
+		return rowsWritten, 0, fmt.Errorf("failed to get file stats: %v", err)
+	}
+
+	return rowsWritten, fileInfo.Size(), nil
+}
+
+// generateTableDDL creates a CREATE TABLE statement for the given schema
+func generateTableDDL(sch schema.Schema, tableName string) (string, error) {
+	var ddl strings.Builder
+	ddl.WriteString(fmt.Sprintf("CREATE TABLE `%s` (\n", tableName))
+
+	cols := sch.GetAllCols().GetColumns()
+	var columnDefs []string
+	var primaryKeys []string
+
+	for _, col := range cols {
+		colDef, err := generateColumnDDL(col)
+		if err != nil {
+			return "", fmt.Errorf("failed to generate DDL for column %s: %v", col.Name, err)
+		}
+		columnDefs = append(columnDefs, colDef)
+
+		if col.IsPartOfPK {
+			primaryKeys = append(primaryKeys, fmt.Sprintf("`%s`", col.Name))
+		}
+	}
+
+	ddl.WriteString("  " + strings.Join(columnDefs, ",\n  "))
+
+	if len(primaryKeys) > 0 {
+		ddl.WriteString(",\n  PRIMARY KEY (")
+		ddl.WriteString(strings.Join(primaryKeys, ", "))
+		ddl.WriteString(")")
+	}
+
+	ddl.WriteString("\n);")
+	return ddl.String(), nil
+}
+
+// generateColumnDDL creates the DDL for a single column
+func generateColumnDDL(col schema.Column) (string, error) {
+	var colDef strings.Builder
+	colDef.WriteString(fmt.Sprintf("`%s` ", col.Name))
+
+	// Map Dolt types to SQL types
+	// Generate column definition using SQL type
+	sqlType := col.TypeInfo.ToSqlType()
+	colDef.WriteString(sqlType.String())
+
+	if !col.IsNullable() {
+		colDef.WriteString(" NOT NULL")
+	}
+
+	return colDef.String(), nil
 }
 
 // generateREADME creates a human-readable README for the Git repository
@@ -607,8 +958,16 @@ func formatBytes(bytes int64) string {
 
 // generateCommitMessage creates a descriptive commit message
 func generateCommitMessage(dEnv *env.DoltEnv) string {
-	// TODO: Generate more descriptive message based on changes
-	return fmt.Sprintf("Update Dolt dataset - %s", time.Now().Format("2006-01-02 15:04:05"))
+	timestamp := time.Now().Format("2006-01-02 15:04:05")
+
+	// Try to get database name for a more descriptive message
+	dbName := "database"
+	if dbData := dEnv.DbData(context.Background()); dbData.Ddb != nil {
+		// Use a simple placeholder name for now
+		dbName = "dolt-repository"
+	}
+
+	return fmt.Sprintf("Export %s dataset to Git - %s", dbName, timestamp)
 }
 
 // commitAndPush commits changes and pushes to remote repository
@@ -656,7 +1015,22 @@ func commitAndPush(ctx context.Context, repo *git.Repository, repoPath, message 
 	if auth != nil {
 		if authMethod, ok := auth.(transport.AuthMethod); ok {
 			pushOptions.Auth = authMethod
+			if verbose {
+				// Don't log sensitive auth details, just indicate what type is being used
+				switch authMethod.(type) {
+				case *ssh.PublicKeys:
+					cli.Println(color.CyanString("Using SSH key authentication"))
+				case *http.BasicAuth:
+					cli.Println(color.CyanString("Using HTTP basic authentication"))
+				default:
+					cli.Println(color.CyanString("Using authentication method: %T", authMethod))
+				}
+			}
+		} else if verbose {
+			cli.Println(color.YellowString("Warning: Authentication object provided but not recognized as transport.AuthMethod"))
 		}
+	} else if verbose {
+		cli.Println(color.YellowString("No authentication method configured - attempting anonymous access"))
 	}
 	if force {
 		pushOptions.Force = true
@@ -666,7 +1040,45 @@ func commitAndPush(ctx context.Context, repo *git.Repository, repoPath, message 
 	}
 
 	if err := repo.Push(pushOptions); err != nil {
-		return fmt.Errorf("failed to push: %v", err)
+		// Provide more helpful error messages based on common failure scenarios
+		errStr := err.Error()
+
+		if strings.Contains(errStr, "ssh: handshake failed") && strings.Contains(errStr, "unable to authenticate") {
+			return fmt.Errorf("SSH authentication failed: %v\n\nTroubleshooting steps:\n"+
+				"1. Ensure your SSH key is added to your Git hosting provider (GitHub, GitLab, etc.)\n"+
+				"2. Test SSH connection: 'ssh -T git@github.com' (for GitHub)\n"+
+				"3. Add your SSH key to ssh-agent: 'ssh-add ~/.ssh/id_ed25519'\n"+
+				"4. Or use token authentication: --token=YOUR_TOKEN\n"+
+				"5. Or use username/password: --username=USER --password=PASS", err)
+		}
+
+		if strings.Contains(errStr, "authentication required") {
+			return fmt.Errorf("authentication required for Git repository: %v\n\nPlease use one of:\n"+
+				"• SSH key (ensure key is added to hosting provider and ssh-agent)\n"+
+				"• Personal access token: --token=YOUR_TOKEN\n"+
+				"• Username/password: --username=USER --password=PASS", err)
+		}
+
+		if strings.Contains(errStr, "repository not found") || strings.Contains(errStr, "404") {
+			return fmt.Errorf("repository not found or access denied: %v\n\nCheck:\n"+
+				"1. Repository URL is correct\n"+
+				"2. Repository exists and you have push access\n"+
+				"3. Authentication credentials are valid", err)
+		}
+
+		if strings.Contains(errStr, "non-fast-forward") {
+			return fmt.Errorf("push rejected due to non-fast-forward update: %v\n\n"+
+				"The remote repository has changes that conflict with your push.\n"+
+				"Try: dolt git pull before pushing, or use --force to override (DANGEROUS)", err)
+		}
+
+		// Generic error with some helpful context
+		return fmt.Errorf("failed to push to Git repository: %v\n\n"+
+			"Common solutions:\n"+
+			"• Check network connectivity\n"+
+			"• Verify repository URL and access permissions\n"+
+			"• Ensure authentication is properly configured\n"+
+			"• Use --verbose flag for more detailed output", err)
 	}
 
 	if verbose {
