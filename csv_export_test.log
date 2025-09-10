@@ -1,4 +1,0 @@
-=== CSV Export Fix Test - Wed Sep 10 03:20:10 AM WEST 2025 ===
-[INFO] Testing CSV export fix for Git integration
-[INFO] This test verifies that CSV files contain actual data, not placeholders
-[INFO] Dolt version: dolt version 1.59.5

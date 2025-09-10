@@ -1,0 +1,901 @@
+=== Holywritings Dataset Git Export Test - Wed Sep 10 03:42:52 AM WEST 2025 ===
+[2025-09-10 03:42:52] === HOLYWRITINGS DATASET GIT EXPORT TEST ===
+[2025-09-10 03:42:52] [INFO] Testing critical CSV export fixes with real-world dataset
+[2025-09-10 03:42:52] [WARNING] This test will REPLACE the contents of git@github.com:lapingvino/holywritings-dolt.git
+[2025-09-10 03:42:52] [INFO] Auto-proceeding with comprehensive test
+[2025-09-10 03:42:52] [WARNING] Will download dataset and replace GitHub repository contents
+[2025-09-10 03:42:52] === CHECKING PREREQUISITES ===
+[2025-09-10 03:42:53] [INFO] Dolt version: dolt version 1.59.5
+[2025-09-10 03:42:55] [SUCCESS] GitHub SSH authentication working
+[2025-09-10 03:42:55] [SUCCESS] Prerequisites check completed
+[2025-09-10 03:42:55] === DOWNLOADING HOLYWRITINGS DATASET FROM DOLTHUB ===
+[2025-09-10 03:42:55] [INFO] Cloning holywritings/bahaiwritings from DoltHub...
+[2025-09-10 03:42:55] [WARNING] This is a LARGE dataset (39,450+ chunks) - will take several minutes
+[2025-09-10 03:42:55] [DEBUG] Starting clone operation...
+cloning https://doltremoteapi.dolthub.com/holywritings/bahaiwritings
+Retrieving remote information.
+[1A[J0 of 39,450 chunks complete. 0 chunks being downloaded currently.
+[1A[J0 of 39,450 chunks complete. 2 chunks being downloaded currently.
+[1A[J0 of 39,450 chunks complete. 4 chunks being downloaded currently.
+[1A[J0 of 39,450 chunks complete. 28 chunks being downloaded currently.
+[1A[J2 of 39,450 chunks complete. 26 chunks being downloaded currently.
+[1A[J2 of 39,450 chunks complete. 38 chunks being downloaded currently.
+[1A[J4 of 39,450 chunks complete. 36 chunks being downloaded currently.
+[1A[J4 of 39,450 chunks complete. 40 chunks being downloaded currently.
+[1A[J8 of 39,450 chunks complete. 36 chunks being downloaded currently.
+[1A[J8 of 39,450 chunks complete. 65 chunks being downloaded currently.
+[1A[J20 of 39,450 chunks complete. 53 chunks being downloaded currently.
+[1A[J20 of 39,450 chunks complete. 58 chunks being downloaded currently.
+[1A[J44 of 39,450 chunks complete. 34 chunks being downloaded currently.
+[1A[J44 of 39,450 chunks complete. 44 chunks being downloaded currently.
+[1A[J73 of 39,450 chunks complete. 15 chunks being downloaded currently.
+[1A[J73 of 39,450 chunks complete. 24 chunks being downloaded currently.
+[1A[J78 of 39,450 chunks complete. 19 chunks being downloaded currently.
+[1A[J78 of 39,450 chunks complete. 51 chunks being downloaded currently.
+[1A[J87 of 39,450 chunks complete. 42 chunks being downloaded currently.
+[1A[J87 of 39,450 chunks complete. 49 chunks being downloaded currently.
+[1A[J97 of 39,450 chunks complete. 39 chunks being downloaded currently.
+[1A[J97 of 39,450 chunks complete. 47 chunks being downloaded currently.
+[1A[J105 of 39,450 chunks complete. 39 chunks being downloaded currently.
+[1A[J105 of 39,450 chunks complete. 41 chunks being downloaded currently.
+[1A[J112 of 39,450 chunks complete. 34 chunks being downloaded currently.
+[1A[J112 of 39,450 chunks complete. 36 chunks being downloaded currently.
+[1A[J144 of 39,450 chunks complete. 4 chunks being downloaded currently.
+[1A[J144 of 39,450 chunks complete. 677 chunks being downloaded currently.
+[1A[J146 of 39,450 chunks complete. 675 chunks being downloaded currently.
+[1A[J146 of 39,450 chunks complete. 679 chunks being downloaded currently.
+[1A[J148 of 39,450 chunks complete. 677 chunks being downloaded currently.
+[1A[J148 of 39,450 chunks complete. 682 chunks being downloaded currently.
+[1A[J152 of 39,450 chunks complete. 678 chunks being downloaded currently.
+[1A[J152 of 39,450 chunks complete. 680 chunks being downloaded currently.
+[1A[J157 of 39,450 chunks complete. 675 chunks being downloaded currently.
+[1A[J157 of 39,450 chunks complete. 677 chunks being downloaded currently.
+[1A[J159 of 39,450 chunks complete. 675 chunks being downloaded currently.
+[1A[J159 of 39,450 chunks complete. 677 chunks being downloaded currently.
+[1A[J161 of 39,450 chunks complete. 675 chunks being downloaded currently.
+[1A[J161 of 39,450 chunks complete. 691 chunks being downloaded currently.
+[1A[J161 of 39,450 chunks complete. 691 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J163 of 39,450 chunks complete. 689 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J163 of 39,450 chunks complete. 691 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J179 of 39,450 chunks complete. 675 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J179 of 39,450 chunks complete. 677 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J181 of 39,450 chunks complete. 675 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J181 of 39,450 chunks complete. 680 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J183 of 39,450 chunks complete. 678 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J183 of 39,450 chunks complete. 697 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 12.73% downloaded, 243 kB/s
+[2A[J183 of 39,450 chunks complete. 697 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 38.27% downloaded, 365 kB/s
+[2A[J188 of 39,450 chunks complete. 692 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 38.27% downloaded, 365 kB/s
+[2A[J188 of 39,450 chunks complete. 719 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 38.27% downloaded, 365 kB/s
+[2A[J207 of 39,450 chunks complete. 700 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 38.27% downloaded, 365 kB/s
+[2A[J207 of 39,450 chunks complete. 703 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 38.27% downloaded, 365 kB/s
+[2A[J210 of 39,450 chunks complete. 700 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 38.27% downloaded, 365 kB/s
+[2A[J210 of 39,450 chunks complete. 707 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 38.27% downloaded, 365 kB/s
+[2A[J210 of 39,450 chunks complete. 707 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 82.07% downloaded, 521 kB/s
+[2A[J217 of 39,450 chunks complete. 700 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 82.07% downloaded, 521 kB/s
+[2A[J217 of 39,450 chunks complete. 702 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 82.07% downloaded, 521 kB/s
+[2A[J244 of 39,450 chunks complete. 675 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 82.07% downloaded, 521 kB/s
+[2A[J244 of 39,450 chunks complete. 1,337 chunks being downloaded currently.
+Downloading file: 2od9bs6panf87asslg0309i9n9f5n4n4 (673 chunks) - 82.07% downloaded, 521 kB/s
+[2A[J917 of 39,450 chunks complete. 664 chunks being downloaded currently.
+[1A[J917 of 39,450 chunks complete. 666 chunks being downloaded currently.
+[1A[J919 of 39,450 chunks complete. 664 chunks being downloaded currently.
+[1A[J919 of 39,450 chunks complete. 666 chunks being downloaded currently.
+[1A[J921 of 39,450 chunks complete. 664 chunks being downloaded currently.
+[1A[J921 of 39,450 chunks complete. 668 chunks being downloaded currently.
+[1A[J923 of 39,450 chunks complete. 666 chunks being downloaded currently.
+[1A[J923 of 39,450 chunks complete. 668 chunks being downloaded currently.
+[1A[J927 of 39,450 chunks complete. 664 chunks being downloaded currently.
+[1A[J927 of 39,450 chunks complete. 1,111 chunks being downloaded currently.
+[1A[J929 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+[1A[J929 of 39,450 chunks complete. 1,111 chunks being downloaded currently.
+[1A[J931 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+[1A[J931 of 39,450 chunks complete. 1,114 chunks being downloaded currently.
+[1A[J931 of 39,450 chunks complete. 1,114 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 18.55% downloaded, 337 kB/s
+[2A[J936 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 18.55% downloaded, 337 kB/s
+[2A[J936 of 39,450 chunks complete. 1,111 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 18.55% downloaded, 337 kB/s
+[2A[J938 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 18.55% downloaded, 337 kB/s
+[2A[J938 of 39,450 chunks complete. 1,176 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 18.55% downloaded, 337 kB/s
+[2A[J938 of 39,450 chunks complete. 1,176 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 31.95% downloaded, 290 kB/s
+[2A[J938 of 39,450 chunks complete. 1,176 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 31.95% downloaded, 290 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 18.86% downloaded, 425 kB/s
+[3A[J1,005 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 31.95% downloaded, 290 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 18.86% downloaded, 425 kB/s
+[3A[J1,005 of 39,450 chunks complete. 1,116 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 31.95% downloaded, 290 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 18.86% downloaded, 425 kB/s
+[3A[J1,005 of 39,450 chunks complete. 1,116 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 56.84% downloaded, 344 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 18.86% downloaded, 425 kB/s
+[3A[J1,012 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 56.84% downloaded, 344 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 18.86% downloaded, 425 kB/s
+[3A[J1,012 of 39,450 chunks complete. 1,275 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 56.84% downloaded, 344 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 18.86% downloaded, 425 kB/s
+[3A[J1,012 of 39,450 chunks complete. 1,275 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 56.84% downloaded, 344 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 32.77% downloaded, 369 kB/s
+[3A[J1,012 of 39,450 chunks complete. 1,275 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 75.98% downloaded, 345 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 32.77% downloaded, 369 kB/s
+[3A[J1,012 of 39,450 chunks complete. 1,275 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 75.98% downloaded, 345 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 57.40% downloaded, 431 kB/s
+[3A[J1,178 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 75.98% downloaded, 345 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 57.40% downloaded, 431 kB/s
+[3A[J1,178 of 39,450 chunks complete. 1,111 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 75.98% downloaded, 345 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 57.40% downloaded, 431 kB/s
+[3A[J1,180 of 39,450 chunks complete. 1,109 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 75.98% downloaded, 345 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 57.40% downloaded, 431 kB/s
+[3A[J1,180 of 39,450 chunks complete. 1,116 chunks being downloaded currently.
+Downloading file: 6419gbkscrr43nggn83js3v4ugjs7vhh (662 chunks) - 75.98% downloaded, 345 kB/s
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 57.40% downloaded, 431 kB/s
+[3A[J1,842 of 39,450 chunks complete. 454 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 57.40% downloaded, 431 kB/s
+[2A[J1,842 of 39,450 chunks complete. 459 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 57.40% downloaded, 431 kB/s
+[2A[J1,842 of 39,450 chunks complete. 459 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,849 of 39,450 chunks complete. 452 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,849 of 39,450 chunks complete. 454 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,854 of 39,450 chunks complete. 449 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,854 of 39,450 chunks complete. 465 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,856 of 39,450 chunks complete. 463 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,856 of 39,450 chunks complete. 467 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,872 of 39,450 chunks complete. 451 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,872 of 39,450 chunks complete. 453 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 74.48% downloaded, 419 kB/s
+[2A[J1,872 of 39,450 chunks complete. 453 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 94.57% downloaded, 426 kB/s
+[2A[J1,876 of 39,450 chunks complete. 449 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 94.57% downloaded, 426 kB/s
+[2A[J1,876 of 39,450 chunks complete. 451 chunks being downloaded currently.
+Downloading file: 7ufs60so1goukbaqtv5pfshfj6887lmq (447 chunks) - 94.57% downloaded, 426 kB/s
+[2A[J2,323 of 39,450 chunks complete. 4 chunks being downloaded currently.
+[1A[J2,323 of 39,450 chunks complete. 13 chunks being downloaded currently.
+[1A[J2,325 of 39,450 chunks complete. 11 chunks being downloaded currently.
+[1A[J2,325 of 39,450 chunks complete. 16 chunks being downloaded currently.
+[1A[J2,327 of 39,450 chunks complete. 14 chunks being downloaded currently.
+[1A[J2,327 of 39,450 chunks complete. 17 chunks being downloaded currently.
+[1A[J2,336 of 39,450 chunks complete. 8 chunks being downloaded currently.
+[1A[J2,336 of 39,450 chunks complete. 1,477 chunks being downloaded currently.
+[1A[J2,341 of 39,450 chunks complete. 1,472 chunks being downloaded currently.
+[1A[J2,341 of 39,450 chunks complete. 1,477 chunks being downloaded currently.
+[1A[J2,344 of 39,450 chunks complete. 1,474 chunks being downloaded currently.
+[1A[J2,344 of 39,450 chunks complete. 1,479 chunks being downloaded currently.
+[1A[J2,349 of 39,450 chunks complete. 1,474 chunks being downloaded currently.
+[1A[J2,349 of 39,450 chunks complete. 1,490 chunks being downloaded currently.
+[1A[J2,354 of 39,450 chunks complete. 1,485 chunks being downloaded currently.
+[1A[J2,354 of 39,450 chunks complete. 1,487 chunks being downloaded currently.
+[1A[J2,370 of 39,450 chunks complete. 1,471 chunks being downloaded currently.
+[1A[J2,370 of 39,450 chunks complete. 1,472 chunks being downloaded currently.
+[1A[J2,370 of 39,450 chunks complete. 1,472 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,372 of 39,450 chunks complete. 1,470 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,372 of 39,450 chunks complete. 1,478 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,373 of 39,450 chunks complete. 1,477 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,373 of 39,450 chunks complete. 1,484 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,381 of 39,450 chunks complete. 1,476 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,381 of 39,450 chunks complete. 1,486 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,388 of 39,450 chunks complete. 1,479 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,388 of 39,450 chunks complete. 1,481 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 16.37% downloaded, 716 kB/s
+[2A[J2,388 of 39,450 chunks complete. 1,481 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,390 of 39,450 chunks complete. 1,479 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,390 of 39,450 chunks complete. 1,480 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,400 of 39,450 chunks complete. 1,470 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,400 of 39,450 chunks complete. 1,478 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,408 of 39,450 chunks complete. 1,470 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,408 of 39,450 chunks complete. 1,478 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,409 of 39,450 chunks complete. 1,477 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,409 of 39,450 chunks complete. 1,479 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 35.15% downloaded, 769 kB/s
+[2A[J2,409 of 39,450 chunks complete. 1,479 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 55.82% downloaded, 814 kB/s
+[2A[J2,411 of 39,450 chunks complete. 1,477 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 55.82% downloaded, 814 kB/s
+[2A[J2,411 of 39,450 chunks complete. 1,482 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 55.82% downloaded, 814 kB/s
+[2A[J2,419 of 39,450 chunks complete. 1,474 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 55.82% downloaded, 814 kB/s
+[2A[J2,419 of 39,450 chunks complete. 14,282 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 55.82% downloaded, 814 kB/s
+[2A[J2,424 of 39,450 chunks complete. 14,277 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 55.82% downloaded, 814 kB/s
+[2A[J2,424 of 39,450 chunks complete. 14,306 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 55.82% downloaded, 814 kB/s
+[2A[J2,424 of 39,450 chunks complete. 14,306 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 78.88% downloaded, 863 kB/s
+[2A[J2,453 of 39,450 chunks complete. 14,277 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 78.88% downloaded, 863 kB/s
+[2A[J2,453 of 39,450 chunks complete. 14,285 chunks being downloaded currently.
+Downloading file: b2nnp9uhmlelghe5gigobdk7h5tejjbi (1,469 chunks) - 78.88% downloaded, 863 kB/s
+[2A[J3,922 of 39,450 chunks complete. 12,816 chunks being downloaded currently.
+[1A[J3,922 of 39,450 chunks complete. 13,154 chunks being downloaded currently.
+[1A[J3,930 of 39,450 chunks complete. 13,146 chunks being downloaded currently.
+[1A[J3,930 of 39,450 chunks complete. 13,148 chunks being downloaded currently.
+[1A[J3,930 of 39,450 chunks complete. 13,148 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 3.44% downloaded, 768 kB/s
+[2A[J3,932 of 39,450 chunks complete. 13,146 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 3.44% downloaded, 768 kB/s
+[2A[J3,932 of 39,450 chunks complete. 13,150 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 3.44% downloaded, 768 kB/s
+[2A[J3,932 of 39,450 chunks complete. 13,150 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+[2A[J3,936 of 39,450 chunks complete. 13,146 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+[2A[J3,936 of 39,450 chunks complete. 13,151 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+[2A[J3,936 of 39,450 chunks complete. 13,151 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+Downloading file: eooq2bt1vcanre4nplk7tejs112i372g (338 chunks) - 92.93% downloaded, 1.2 MB/s
+[3A[J3,941 of 39,450 chunks complete. 13,146 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+Downloading file: eooq2bt1vcanre4nplk7tejs112i372g (338 chunks) - 92.93% downloaded, 1.2 MB/s
+[3A[J3,941 of 39,450 chunks complete. 13,152 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+Downloading file: eooq2bt1vcanre4nplk7tejs112i372g (338 chunks) - 92.93% downloaded, 1.2 MB/s
+[3A[J4,279 of 39,450 chunks complete. 12,814 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+[2A[J4,279 of 39,450 chunks complete. 12,816 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 6.10% downloaded, 680 kB/s
+[2A[J4,279 of 39,450 chunks complete. 12,816 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 7.81% downloaded, 580 kB/s
+[2A[J4,281 of 39,450 chunks complete. 12,814 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 7.81% downloaded, 580 kB/s
+[2A[J4,281 of 39,450 chunks complete. 13,750 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 7.81% downloaded, 580 kB/s
+[2A[J4,287 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 7.81% downloaded, 580 kB/s
+[2A[J4,287 of 39,450 chunks complete. 13,749 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 7.81% downloaded, 580 kB/s
+[2A[J4,292 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 7.81% downloaded, 580 kB/s
+[2A[J4,292 of 39,450 chunks complete. 13,746 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 7.81% downloaded, 580 kB/s
+[2A[J4,292 of 39,450 chunks complete. 13,746 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 10.62% downloaded, 592 kB/s
+[2A[J4,294 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 10.62% downloaded, 592 kB/s
+[2A[J4,294 of 39,450 chunks complete. 13,746 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 10.62% downloaded, 592 kB/s
+[2A[J4,294 of 39,450 chunks complete. 13,746 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 10.62% downloaded, 592 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 8.21% downloaded, 409 kB/s
+[3A[J4,296 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 10.62% downloaded, 592 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 8.21% downloaded, 409 kB/s
+[3A[J4,296 of 39,450 chunks complete. 13,747 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 10.62% downloaded, 592 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 8.21% downloaded, 409 kB/s
+[3A[J4,296 of 39,450 chunks complete. 13,747 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 13.90% downloaded, 619 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 8.21% downloaded, 409 kB/s
+[3A[J4,296 of 39,450 chunks complete. 13,747 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 13.90% downloaded, 619 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 17.37% downloaded, 433 kB/s
+[3A[J4,299 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 13.90% downloaded, 619 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 17.37% downloaded, 433 kB/s
+[3A[J4,299 of 39,450 chunks complete. 13,752 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 13.90% downloaded, 619 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 17.37% downloaded, 433 kB/s
+[3A[J4,299 of 39,450 chunks complete. 13,752 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 17.17% downloaded, 638 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 17.37% downloaded, 433 kB/s
+[3A[J4,307 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 17.17% downloaded, 638 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 17.37% downloaded, 433 kB/s
+[3A[J4,307 of 39,450 chunks complete. 14,087 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 17.17% downloaded, 638 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 17.37% downloaded, 433 kB/s
+[3A[J4,307 of 39,450 chunks complete. 14,087 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 17.17% downloaded, 638 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 27.88% downloaded, 463 kB/s
+[3A[J4,307 of 39,450 chunks complete. 14,087 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 22.32% downloaded, 711 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 27.88% downloaded, 463 kB/s
+[3A[J4,650 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 22.32% downloaded, 711 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 27.88% downloaded, 463 kB/s
+[3A[J4,650 of 39,450 chunks complete. 13,759 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 22.32% downloaded, 711 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 27.88% downloaded, 463 kB/s
+[3A[J4,650 of 39,450 chunks complete. 13,759 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 22.32% downloaded, 711 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 43.92% downloaded, 548 kB/s
+[3A[J4,650 of 39,450 chunks complete. 13,759 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 25.44% downloaded, 709 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 43.92% downloaded, 548 kB/s
+[3A[J4,665 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 25.44% downloaded, 709 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 43.92% downloaded, 548 kB/s
+[3A[J4,665 of 39,450 chunks complete. 14,038 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 25.44% downloaded, 709 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 43.92% downloaded, 548 kB/s
+[3A[J4,665 of 39,450 chunks complete. 14,038 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 25.44% downloaded, 709 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 57.18% downloaded, 570 kB/s
+[3A[J4,665 of 39,450 chunks complete. 14,038 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 57.18% downloaded, 570 kB/s
+[3A[J4,959 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 57.18% downloaded, 570 kB/s
+[3A[J4,959 of 39,450 chunks complete. 13,765 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 57.18% downloaded, 570 kB/s
+[3A[J4,980 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 57.18% downloaded, 570 kB/s
+[3A[J4,980 of 39,450 chunks complete. 13,749 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 57.18% downloaded, 570 kB/s
+[3A[J4,980 of 39,450 chunks complete. 13,749 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 78.80% downloaded, 655 kB/s
+[3A[J4,985 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 78.80% downloaded, 655 kB/s
+[3A[J4,985 of 39,450 chunks complete. 13,746 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 29.34% downloaded, 727 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 78.80% downloaded, 655 kB/s
+[3A[J4,985 of 39,450 chunks complete. 13,746 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 78.80% downloaded, 655 kB/s
+[3A[J4,987 of 39,450 chunks complete. 13,744 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 78.80% downloaded, 655 kB/s
+[3A[J4,987 of 39,450 chunks complete. 13,764 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 78.80% downloaded, 655 kB/s
+[3A[J4,987 of 39,450 chunks complete. 13,764 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+Downloading file: fh947ueqe694l68f3mja4qpb846bke3v (936 chunks) - 95.55% downloaded, 680 kB/s
+[3A[J5,923 of 39,450 chunks complete. 12,828 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+[2A[J5,923 of 39,450 chunks complete. 12,829 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+[2A[J5,943 of 39,450 chunks complete. 12,809 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+[2A[J5,943 of 39,450 chunks complete. 13,477 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 34.18% downloaded, 762 kB/s
+[2A[J5,943 of 39,450 chunks complete. 13,477 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 38.39% downloaded, 778 kB/s
+[2A[J5,944 of 39,450 chunks complete. 13,476 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 38.39% downloaded, 778 kB/s
+[2A[J5,944 of 39,450 chunks complete. 13,480 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 38.39% downloaded, 778 kB/s
+[2A[J5,944 of 39,450 chunks complete. 13,480 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+[2A[J5,948 of 39,450 chunks complete. 13,476 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+[2A[J5,948 of 39,450 chunks complete. 13,494 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+[2A[J5,948 of 39,450 chunks complete. 13,494 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+Downloading file: hn3sqib67untb92hml8n1hif5dl3kgrr (668 chunks) - 85.14% downloaded, 1.6 MB/s
+[3A[J6,616 of 39,450 chunks complete. 12,826 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+[2A[J6,616 of 39,450 chunks complete. 12,860 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+[2A[J6,634 of 39,450 chunks complete. 12,842 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+[2A[J6,634 of 39,450 chunks complete. 12,844 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 42.28% downloaded, 786 kB/s
+[2A[J6,634 of 39,450 chunks complete. 12,844 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 44.48% downloaded, 763 kB/s
+[2A[J6,636 of 39,450 chunks complete. 12,842 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 44.48% downloaded, 763 kB/s
+[2A[J6,636 of 39,450 chunks complete. 13,490 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 44.48% downloaded, 763 kB/s
+[2A[J6,670 of 39,450 chunks complete. 13,456 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 44.48% downloaded, 763 kB/s
+[2A[J6,670 of 39,450 chunks complete. 13,458 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 44.48% downloaded, 763 kB/s
+[2A[J6,672 of 39,450 chunks complete. 13,456 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 44.48% downloaded, 763 kB/s
+[2A[J6,672 of 39,450 chunks complete. 13,560 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 44.48% downloaded, 763 kB/s
+[2A[J6,672 of 39,450 chunks complete. 13,560 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 48.38% downloaded, 770 kB/s
+[2A[J6,776 of 39,450 chunks complete. 13,456 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 48.38% downloaded, 770 kB/s
+[2A[J6,776 of 39,450 chunks complete. 13,507 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 48.38% downloaded, 770 kB/s
+[2A[J6,776 of 39,450 chunks complete. 13,507 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 48.38% downloaded, 770 kB/s
+Downloading file: ijn0qdbn04cmpka7fttf03lqjq0i2eo0 (648 chunks) - 44.84% downloaded, 952 kB/s
+[3A[J6,776 of 39,450 chunks complete. 13,507 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+Downloading file: ijn0qdbn04cmpka7fttf03lqjq0i2eo0 (648 chunks) - 44.84% downloaded, 952 kB/s
+[3A[J6,827 of 39,450 chunks complete. 13,456 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+Downloading file: ijn0qdbn04cmpka7fttf03lqjq0i2eo0 (648 chunks) - 44.84% downloaded, 952 kB/s
+[3A[J6,827 of 39,450 chunks complete. 13,458 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+Downloading file: ijn0qdbn04cmpka7fttf03lqjq0i2eo0 (648 chunks) - 44.84% downloaded, 952 kB/s
+[3A[J6,827 of 39,450 chunks complete. 13,458 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+Downloading file: ijn0qdbn04cmpka7fttf03lqjq0i2eo0 (648 chunks) - 94.20% downloaded, 1000 kB/s
+[3A[J7,475 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+[2A[J7,475 of 39,450 chunks complete. 13,447 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+[2A[J7,477 of 39,450 chunks complete. 13,445 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+[2A[J7,477 of 39,450 chunks complete. 13,449 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 52.28% downloaded, 777 kB/s
+[2A[J7,477 of 39,450 chunks complete. 13,449 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 56.18% downloaded, 783 kB/s
+[2A[J7,481 of 39,450 chunks complete. 13,445 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 56.18% downloaded, 783 kB/s
+[2A[J7,481 of 39,450 chunks complete. 13,447 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 56.18% downloaded, 783 kB/s
+[2A[J7,483 of 39,450 chunks complete. 13,445 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 56.18% downloaded, 783 kB/s
+[2A[J7,483 of 39,450 chunks complete. 13,449 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 56.18% downloaded, 783 kB/s
+[2A[J7,483 of 39,450 chunks complete. 13,449 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 60.23% downloaded, 790 kB/s
+[2A[J8,120 of 39,450 chunks complete. 12,812 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 60.23% downloaded, 790 kB/s
+[2A[J8,120 of 39,450 chunks complete. 12,814 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 60.23% downloaded, 790 kB/s
+[2A[J8,124 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 60.23% downloaded, 790 kB/s
+[2A[J8,124 of 39,450 chunks complete. 12,818 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 60.23% downloaded, 790 kB/s
+[2A[J8,126 of 39,450 chunks complete. 12,816 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 60.23% downloaded, 790 kB/s
+[2A[J8,126 of 39,450 chunks complete. 13,272 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 60.23% downloaded, 790 kB/s
+[2A[J8,126 of 39,450 chunks complete. 13,272 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 64.14% downloaded, 794 kB/s
+[2A[J8,134 of 39,450 chunks complete. 13,264 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 64.14% downloaded, 794 kB/s
+[2A[J8,134 of 39,450 chunks complete. 13,268 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 64.14% downloaded, 794 kB/s
+[2A[J8,138 of 39,450 chunks complete. 13,264 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 64.14% downloaded, 794 kB/s
+[2A[J8,138 of 39,450 chunks complete. 13,293 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 64.14% downloaded, 794 kB/s
+[2A[J8,594 of 39,450 chunks complete. 12,837 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 64.14% downloaded, 794 kB/s
+[2A[J8,594 of 39,450 chunks complete. 12,841 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 64.14% downloaded, 794 kB/s
+[2A[J8,594 of 39,450 chunks complete. 12,841 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,598 of 39,450 chunks complete. 12,837 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,598 of 39,450 chunks complete. 12,852 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,627 of 39,450 chunks complete. 12,823 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,627 of 39,450 chunks complete. 12,825 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,629 of 39,450 chunks complete. 12,823 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,629 of 39,450 chunks complete. 12,825 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,644 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,644 of 39,450 chunks complete. 12,818 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 68.04% downloaded, 798 kB/s
+[2A[J8,644 of 39,450 chunks complete. 12,818 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,646 of 39,450 chunks complete. 12,816 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,646 of 39,450 chunks complete. 12,823 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,654 of 39,450 chunks complete. 12,815 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,654 of 39,450 chunks complete. 12,823 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,662 of 39,450 chunks complete. 12,815 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,662 of 39,450 chunks complete. 12,817 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,669 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,669 of 39,450 chunks complete. 12,812 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 72.09% downloaded, 804 kB/s
+[2A[J8,669 of 39,450 chunks complete. 12,812 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,671 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,671 of 39,450 chunks complete. 12,812 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,673 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,673 of 39,450 chunks complete. 12,937 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,675 of 39,450 chunks complete. 12,935 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,675 of 39,450 chunks complete. 12,939 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,802 of 39,450 chunks complete. 12,812 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,802 of 39,450 chunks complete. 12,828 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 75.99% downloaded, 807 kB/s
+[2A[J8,802 of 39,450 chunks complete. 12,828 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,806 of 39,450 chunks complete. 12,824 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,806 of 39,450 chunks complete. 12,828 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,822 of 39,450 chunks complete. 12,812 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,822 of 39,450 chunks complete. 12,814 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,826 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,826 of 39,450 chunks complete. 12,812 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,828 of 39,450 chunks complete. 12,810 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,828 of 39,450 chunks complete. 12,837 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 80.21% downloaded, 813 kB/s
+[2A[J8,828 of 39,450 chunks complete. 12,837 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 84.42% downloaded, 818 kB/s
+[2A[J8,830 of 39,450 chunks complete. 12,835 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 84.42% downloaded, 818 kB/s
+[2A[J8,830 of 39,450 chunks complete. 12,882 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 84.42% downloaded, 818 kB/s
+[2A[J8,857 of 39,450 chunks complete. 12,855 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 84.42% downloaded, 818 kB/s
+[2A[J8,857 of 39,450 chunks complete. 12,863 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 84.42% downloaded, 818 kB/s
+[2A[J8,904 of 39,450 chunks complete. 12,816 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 84.42% downloaded, 818 kB/s
+[2A[J8,904 of 39,450 chunks complete. 16,090 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 84.42% downloaded, 818 kB/s
+[2A[J8,904 of 39,450 chunks complete. 16,090 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 88.94% downloaded, 826 kB/s
+[2A[J8,912 of 39,450 chunks complete. 16,082 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 88.94% downloaded, 826 kB/s
+[2A[J8,912 of 39,450 chunks complete. 16,084 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 88.94% downloaded, 826 kB/s
+[2A[J8,914 of 39,450 chunks complete. 16,082 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 88.94% downloaded, 826 kB/s
+[2A[J8,914 of 39,450 chunks complete. 16,084 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 88.94% downloaded, 826 kB/s
+[2A[J8,914 of 39,450 chunks complete. 16,084 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 93.63% downloaded, 835 kB/s
+[2A[J8,916 of 39,450 chunks complete. 16,082 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 93.63% downloaded, 835 kB/s
+[2A[J8,916 of 39,450 chunks complete. 16,084 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 93.63% downloaded, 835 kB/s
+[2A[J8,916 of 39,450 chunks complete. 16,084 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 93.63% downloaded, 835 kB/s
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 15.52% downloaded, 1.1 MB/s
+[3A[J8,918 of 39,450 chunks complete. 16,082 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 93.63% downloaded, 835 kB/s
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 15.52% downloaded, 1.1 MB/s
+[3A[J8,918 of 39,450 chunks complete. 16,116 chunks being downloaded currently.
+Downloading file: ef2d9uapk5ck7h8o1s597l4u8jg3m109 (12,808 chunks) - 93.63% downloaded, 835 kB/s
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 15.52% downloaded, 1.1 MB/s
+[3A[J21,726 of 39,450 chunks complete. 3,308 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 15.52% downloaded, 1.1 MB/s
+[2A[J21,726 of 39,450 chunks complete. 3,310 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 15.52% downloaded, 1.1 MB/s
+[2A[J21,760 of 39,450 chunks complete. 3,276 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 15.52% downloaded, 1.1 MB/s
+[2A[J21,760 of 39,450 chunks complete. 3,281 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 15.52% downloaded, 1.1 MB/s
+[2A[J21,760 of 39,450 chunks complete. 3,281 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 23.94% downloaded, 870 kB/s
+[2A[J21,762 of 39,450 chunks complete. 3,279 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 23.94% downloaded, 870 kB/s
+[2A[J21,762 of 39,450 chunks complete. 6,229 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 23.94% downloaded, 870 kB/s
+[2A[J21,767 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 23.94% downloaded, 870 kB/s
+[2A[J21,767 of 39,450 chunks complete. 6,226 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 23.94% downloaded, 870 kB/s
+[2A[J21,769 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 23.94% downloaded, 870 kB/s
+[2A[J21,769 of 39,450 chunks complete. 6,226 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 23.94% downloaded, 870 kB/s
+[2A[J21,769 of 39,450 chunks complete. 6,226 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 37.81% downloaded, 916 kB/s
+[2A[J21,771 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 37.81% downloaded, 916 kB/s
+[2A[J21,771 of 39,450 chunks complete. 6,234 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 37.81% downloaded, 916 kB/s
+[2A[J21,781 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 37.81% downloaded, 916 kB/s
+[2A[J21,781 of 39,450 chunks complete. 6,228 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 37.81% downloaded, 916 kB/s
+[2A[J21,781 of 39,450 chunks complete. 6,228 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 37.81% downloaded, 916 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 31.59% downloaded, 1.8 MB/s
+[3A[J21,781 of 39,450 chunks complete. 6,228 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 31.59% downloaded, 1.8 MB/s
+[3A[J21,785 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 31.59% downloaded, 1.8 MB/s
+[3A[J21,785 of 39,450 chunks complete. 6,232 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 31.59% downloaded, 1.8 MB/s
+[3A[J21,793 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 31.59% downloaded, 1.8 MB/s
+[3A[J21,793 of 39,450 chunks complete. 6,231 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 31.59% downloaded, 1.8 MB/s
+[3A[J21,793 of 39,450 chunks complete. 6,231 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 54.47% downloaded, 1.5 MB/s
+[3A[J21,800 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 54.47% downloaded, 1.5 MB/s
+[3A[J21,800 of 39,450 chunks complete. 6,228 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 47.35% downloaded, 861 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 54.47% downloaded, 1.5 MB/s
+[3A[J21,800 of 39,450 chunks complete. 6,228 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 54.47% downloaded, 1.5 MB/s
+[3A[J21,804 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 54.47% downloaded, 1.5 MB/s
+[3A[J21,804 of 39,450 chunks complete. 6,233 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 54.47% downloaded, 1.5 MB/s
+[3A[J21,804 of 39,450 chunks complete. 6,233 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 91.58% downloaded, 1.7 MB/s
+[3A[J21,813 of 39,450 chunks complete. 6,224 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 91.58% downloaded, 1.7 MB/s
+[3A[J21,813 of 39,450 chunks complete. 6,231 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+Downloading file: p9atps47i54cjipljgm06gdgpl01idra (2,950 chunks) - 91.58% downloaded, 1.7 MB/s
+[3A[J24,763 of 39,450 chunks complete. 3,281 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+[2A[J24,763 of 39,450 chunks complete. 3,951 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 60.29% downloaded, 877 kB/s
+[2A[J24,763 of 39,450 chunks complete. 3,951 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 71.77% downloaded, 870 kB/s
+[2A[J24,770 of 39,450 chunks complete. 3,944 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 71.77% downloaded, 870 kB/s
+[2A[J24,770 of 39,450 chunks complete. 3,973 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 71.77% downloaded, 870 kB/s
+[2A[J24,799 of 39,450 chunks complete. 3,944 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 71.77% downloaded, 870 kB/s
+[2A[J24,799 of 39,450 chunks complete. 3,953 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 71.77% downloaded, 870 kB/s
+[2A[J24,799 of 39,450 chunks complete. 3,953 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 81.82% downloaded, 850 kB/s
+[2A[J25,469 of 39,450 chunks complete. 3,283 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 81.82% downloaded, 850 kB/s
+[2A[J25,469 of 39,450 chunks complete. 3,287 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 81.82% downloaded, 850 kB/s
+[2A[J25,478 of 39,450 chunks complete. 3,278 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 81.82% downloaded, 850 kB/s
+[2A[J25,478 of 39,450 chunks complete. 3,382 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 81.82% downloaded, 850 kB/s
+[2A[J25,482 of 39,450 chunks complete. 3,378 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 81.82% downloaded, 850 kB/s
+[2A[J25,482 of 39,450 chunks complete. 3,402 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 81.82% downloaded, 850 kB/s
+[2A[J25,482 of 39,450 chunks complete. 3,402 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 96.65% downloaded, 879 kB/s
+[2A[J25,586 of 39,450 chunks complete. 3,298 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 96.65% downloaded, 879 kB/s
+[2A[J25,586 of 39,450 chunks complete. 13,790 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 96.65% downloaded, 879 kB/s
+[2A[J25,610 of 39,450 chunks complete. 13,766 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 96.65% downloaded, 879 kB/s
+[2A[J25,610 of 39,450 chunks complete. 13,771 chunks being downloaded currently.
+Downloading file: o788nrd202co910ajf7s8n11qks7oa64 (3,274 chunks) - 96.65% downloaded, 879 kB/s
+[2A[J28,884 of 39,450 chunks complete. 10,497 chunks being downloaded currently.
+[1A[J28,884 of 39,450 chunks complete. 10,499 chunks being downloaded currently.
+[1A[J28,889 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+[1A[J28,889 of 39,450 chunks complete. 10,496 chunks being downloaded currently.
+[1A[J28,891 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+[1A[J28,891 of 39,450 chunks complete. 10,503 chunks being downloaded currently.
+[1A[J28,900 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+[1A[J28,900 of 39,450 chunks complete. 10,496 chunks being downloaded currently.
+[1A[J28,902 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+[1A[J28,902 of 39,450 chunks complete. 10,496 chunks being downloaded currently.
+[1A[J28,902 of 39,450 chunks complete. 10,496 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,904 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,904 of 39,450 chunks complete. 10,499 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,906 of 39,450 chunks complete. 10,497 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,906 of 39,450 chunks complete. 10,499 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,908 of 39,450 chunks complete. 10,497 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,908 of 39,450 chunks complete. 10,499 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,913 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,913 of 39,450 chunks complete. 10,499 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 14.12% downloaded, 3.1 MB/s
+[2A[J28,913 of 39,450 chunks complete. 10,499 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,915 of 39,450 chunks complete. 10,497 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,915 of 39,450 chunks complete. 10,531 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,920 of 39,450 chunks complete. 10,526 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,920 of 39,450 chunks complete. 10,528 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,954 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,954 of 39,450 chunks complete. 10,496 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,956 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 25.62% downloaded, 2.8 MB/s
+[2A[J28,956 of 39,450 chunks complete. 10,494 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 37.56% downloaded, 2.8 MB/s
+[2A[J28,958 of 39,450 chunks complete. 10,492 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 37.56% downloaded, 2.8 MB/s
+[2A[J28,958 of 39,450 chunks complete. 10,492 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 47.58% downloaded, 2.6 MB/s
+[2A[J28,958 of 39,450 chunks complete. 10,492 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 59.08% downloaded, 2.6 MB/s
+[2A[J28,958 of 39,450 chunks complete. 10,492 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 73.82% downloaded, 2.7 MB/s
+[2A[J28,958 of 39,450 chunks complete. 10,492 chunks being downloaded currently.
+Downloading file: sd0a1gtoqcc2ni0d449c45vgfacr1vku (10,492 chunks) - 90.92% downloaded, 2.9 MB/s
+[2A[J39,450 of 39,450 chunks complete. 0 chunks being downloaded currently.
+[1A[J39,450 of 39,450 chunks complete.
+[2025-09-10 03:43:32] [SUCCESS] 🎉 CLONE COMPLETED: Dataset downloaded successfully
+[2025-09-10 03:43:32] [SUCCESS] Downloaded holywritings/bahaiwritings dataset (39,450+ chunks)
+[2025-09-10 03:43:32] [SUCCESS] 📊 Dataset ready for analysis and export
+On branch main
+Your branch is up to date with 'origin/main'.
+nothing to commit, working tree clean
++------------------------------------+
+| Tables_in_holywritings-export-test |
++------------------------------------+
+| languages                          |
+| prayer_heuristics                  |
+| prayer_match_candidates            |
+| writings                           |
++------------------------------------+
+
+46M	.
+[33m6mfp5r5t4oc81982trhot1cvnmq5tgd0 [0m[33m([0m[36;1mHEAD -> [0m[33m[92mmain[0m[33m, [0m[91mremotes/origin/main[0m) [0mRun SQL query: UPDATE `writings` SET `phelps` = "BH02198" WHERE `version` = "0aeaa64b-1eab-4bb2-a2d5-ae8c19282d4c"
+[33mh9g8lda2a03fldo4ubbl3u12brue5nn8 [0mUpdate transliterations with improved dictionary-based transliterator
+[33m5s6kv1i3422c35rvkd9ulgmr783bnram [0mUpdate transliterations with improved dictionary-based transliterator
+[33m5d7qed4o2s5krkbuqgvfnhm8jdccu5sg [0m[33m([0m[33m[91mremotes/origin/lapingvino/workspace-iced-platypus[0m) [0mRun SQL query: DELETE FROM `languages` WHERE `langcode` = "nai-us" AND `inlang` = "en"
+[33mp5sltdakts05ls8bpf035dbp06i9lsb6 [0mRun SQL query: DELETE FROM `languages` WHERE `langcode` = "nai-ca" AND `inlang` = "en"
+Cloning into '/home/joop/dolt/holywritings-backup'...
+total 12
+drwxr-xr-x 1 joop joop  118 Sep 10 03:43 .
+drwxr-xr-x 1 joop joop 1546 Sep 10 03:43 ..
+drwxr-xr-x 1 joop joop  190 Sep 10 03:43 data
+drwxr-xr-x 1 joop joop   58 Sep 10 03:43 .dolt-metadata
+drwxr-xr-x 1 joop joop  138 Sep 10 03:43 .git
+-rw-r--r-- 1 joop joop   46 Sep 10 03:43 holywritings_export_test.log
+-rw-r--r-- 1 joop joop  997 Sep 10 03:43 README.md
+data/departments/departments.csv
+data/dolt_query_catalog/dolt_query_catalog.csv
+data/employees/employees.csv
+data/languages/languages.csv
+data/prayer_heuristics/prayer_heuristics.csv
+data/prayer_match_candidates/prayer_match_candidates.csv
+data/writings/writings.csv
+Pushing to Git repository: git@github.com:lapingvino/holywritings-dolt.git
+Target branch: main
+Configuration:
+  Chunk size: 52428800 bytes (50.0 MB)
+  Git LFS enabled: true
+Cloning existing Git repository...
+Exporting 5 tables...
+  Exporting table: dolt_query_catalog
+    Table dolt_query_catalog exported as single file (0 rows)
+  Exporting table: languages
+    Table languages exported as single file (120 rows)
+  Exporting table: prayer_heuristics
+    Table prayer_heuristics exported as single file (33 rows)
+  Exporting table: prayer_match_candidates
+    Table prayer_match_candidates exported as single file (4 rows)
+  Exporting table: writings
+    Table writings exported as single file (9000 rows)
+Exporting database schema...
+Generating repository metadata...
+Generating README.md...
+Dry run completed successfully
+Pushing to Git repository: git@github.com:lapingvino/holywritings-dolt.git
+Target branch: main
+Configuration:
+  Chunk size: 52428800 bytes (50.0 MB)
+  Git LFS enabled: true
+Cloning existing Git repository...
+Exporting 5 tables...
+  Exporting table: dolt_query_catalog
+    Table dolt_query_catalog exported as single file (0 rows)
+  Exporting table: languages
+    Table languages exported as single file (120 rows)
+  Exporting table: prayer_heuristics
+    Table prayer_heuristics exported as single file (33 rows)
+  Exporting table: prayer_match_candidates
+    Table prayer_match_candidates exported as single file (4 rows)
+  Exporting table: writings
+    Table writings exported as single file (9000 rows)
+Exporting database schema...
+Generating repository metadata...
+Generating README.md...
+Adding files to Git...
+Committing changes...
+✓ Created commit: 6a486b9d
+Pushing to remote repository...
+Using authentication method: *ssh.PublicKeysCallback
+✓ Successfully pushed to remote repository
+Successfully pushed Dolt data to Git repository
+Repository URL: git@github.com:lapingvino/holywritings-dolt.git
+Branch: main
+Cloning into '/home/joop/dolt/holywritings-verification'...
+langcode,inlang,name
+af,en,Afrikaans
+am,en,Amharic
+id,phelps_code,prayer_name,language_pattern,text_pattern,pattern_type,confidence_level,notes,created_date,validated,match_count
+1,BH11209,Short Obligatory Prayer,fj,##Short Obligatory Prayer,contains,high,Fijian prayer with English header,2025-07-06 20:14:27,1,1
+2,BH11209,Short Obligatory Prayer,ht,RESITE PRIYÈ SA A CHAK JOU A MIDI,contains,high,Haitian Creole: Recite this prayer every day at noon,2025-07-06 20:14:27,1,1
+Successfully cloned Dolt repository to '../import-test'
+To start working with the data:
+  cd ../import-test
+  dolt sql
