@@ -98,6 +98,10 @@ func (s *SizeBasedChunking) ShouldChunk(tableName string, estimatedSize int64) b
 	return estimatedSize > s.MaxChunkSize
 }
 
+func (s *SizeBasedChunking) GetChunkSize() int64 {
+	return s.MaxChunkSize
+}
+
 func (s *SizeBasedChunking) CreateChunks(ctx context.Context, tableName string, reader TableReader, outputDir string) ([]ChunkInfo, error) {
 	var chunks []ChunkInfo
 	chunkIndex := 1

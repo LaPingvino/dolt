@@ -1,4 +1,4 @@
-#!/run/current-system/sw/bin/bash
+#!/bin/bash
 
 # Resume Git Integration Testing Script
 # Post-restart continuation script for Dolt Git integration development

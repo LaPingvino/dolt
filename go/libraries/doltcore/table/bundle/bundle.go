@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"github.com/dolthub/go-mysql-server/sql"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 
 	"github.com/dolthub/dolt/go/libraries/doltcore/row"
 	"github.com/dolthub/dolt/go/libraries/doltcore/schema"
@@ -103,7 +103,7 @@ func OpenBundleReader(bundlePath string) (*BundleReader, error) {
 		return nil, fmt.Errorf("bundle file does not exist: %s", bundlePath)
 	}
 
-	db, err := stdsql.Open("sqlite3", bundlePath+"?mode=ro")
+	db, err := stdsql.Open("sqlite", bundlePath+"?mode=ro")
 	if err != nil {
 		return nil, fmt.Errorf("failed to open bundle database: %v", err)
 	}
@@ -133,7 +133,7 @@ func CreateBundle(ctx context.Context, bundlePath, repoRoot string, info *Bundle
 	// Remove existing bundle file
 	os.Remove(bundlePath)
 
-	db, err := stdsql.Open("sqlite3", bundlePath)
+	db, err := stdsql.Open("sqlite", bundlePath)
 	if err != nil {
 		return fmt.Errorf("failed to create bundle database: %v", err)
 	}

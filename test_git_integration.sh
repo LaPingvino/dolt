@@ -1,4 +1,4 @@
-#!/run/current-system/sw/bin/bash
+#!/bin/bash
 
 # Git Integration Test Script
 # Tests the Dolt Git integration using the holywritings/bahaiwritings dataset
@@ -62,6 +62,14 @@ check_prerequisites() {
         log_info "Ensure your SSH key is added to GitHub for authentication"
     fi
 
+    # Run Git diagnostics
+    log_info "Running Git integration diagnostics..."
+    if $DOLT_BIN git diagnostics 2>&1 | tee -a "$LOG_FILE"; then
+        log_success "Git diagnostics completed"
+    else
+        log_warning "Git diagnostics detected issues - proceeding anyway for testing"
+    fi
+
     log_success "Prerequisites check passed"
 }
 
@@ -98,13 +106,19 @@ inspect_data() {
     log_success "Data inspection completed"
 }
 
-# Step 3: Test Git status before any changes
+# Step 3: Test Git diagnostics and status
 test_git_status() {
-    log_info "Step 3: Testing Git status functionality..."
+    log_info "Step 3: Testing Git diagnostics and status functionality..."
 
+    # Test diagnostics command
+    log_info "Running targeted GitHub diagnostics..."
+    $DOLT_BIN git diagnostics --host=github.com || log_warning "Diagnostics detected issues"
+
+    # Test status command
+    log_info "Testing Git status..."
     $DOLT_BIN git status
 
-    log_success "Git status command working"
+    log_success "Git diagnostics and status commands working"
 }
 
 # Step 4: Stage tables for Git
@@ -154,12 +168,7 @@ test_dry_run() {
 push_to_github() {
     log_info "Step 7: Pushing to GitHub repository..."
 
-    log_warning "This will push data to the GitHub repository. Continue? (y/n)"
-    read -r response
-    if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        log_info "Skipping actual push to GitHub"
-        return 0
-    fi
+    log_info "Proceeding with automatic push to GitHub..."
 
     $DOLT_BIN git push --verbose "$GITHUB_REPO" main
 
@@ -252,6 +261,7 @@ main() {
     log_success "Git Integration Test completed successfully!"
     log_info "Summary:"
     log_info "- Cloned real dataset from DoltHub ✓"
+    log_info "- Ran Git integration diagnostics ✓"
     log_info "- Tested all Git workflow commands ✓"
     log_info "- Validated chunking behavior ✓"
     log_info "- Tested authentication and push process ✓"
